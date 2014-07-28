@@ -1,0 +1,17 @@
+{
+    "autores":[
+        [
+            "", 
+            ""
+        ]
+    ], 
+    "categoria":"", 
+    "descripcion":"", 
+    "licencia":"GPL2", 
+    "main":"Main.py", 
+    "mimetypes":"", 
+    "nombre":"Bichos", 
+    "path":"/home/flavio/BatovideWorkSpace/Bichos", 
+    "url":"", 
+    "version":"0.0.1"
+}
