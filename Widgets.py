@@ -18,6 +18,7 @@ class Escenario(gtk.DrawingArea):
         self.modify_bg(0, gtk.gdk.color_parse("#000000"))
 
         self.connect("expose-event", self.__redraw)
+
         self.show_all()
 
     def __redraw(self, widget, event):

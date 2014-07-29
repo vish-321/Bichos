@@ -5,8 +5,15 @@ import os
 import sys
 import gtk
 import gobject
+#import threading
 
-from Intro import Intro
+from EventTraductor.EventTraductor import KeyPressTraduce
+from EventTraductor.EventTraductor import KeyReleaseTraduce
+from EventTraductor.EventTraductor import MousemotionTraduce
+from EventTraductor.EventTraductor import Traduce_button_press_event
+from EventTraductor.EventTraductor import Traduce_button_release_event
+
+from Intro.Intro import Intro
 from Widgets import Escenario
 
 
@@ -24,13 +31,52 @@ class Bichos(gtk.Window):
         self.set_border_width(2)
         self.set_position(gtk.WIN_POS_CENTER)
 
+        self.set_events(
+            gtk.gdk.KEY_PRESS | gtk.gdk.EXPOSE |
+            gtk.gdk.POINTER_MOTION_MASK | gtk.gdk.POINTER_MOTION_HINT_MASK |
+            gtk.gdk.BUTTON_MOTION_MASK | gtk.gdk.BUTTON_PRESS_MASK |
+            gtk.gdk.BUTTON_RELEASE_MASK)
+
+        self.__button_state = [0, 0, 0]
+        self.__mouse_pos = (0, 0)
+
         self.juego = False
 
+        self.connect("key-press-event", self.__key_press_even)
+        self.connect("key-release-event", self.__key_release_even)
+        self.connect("button_press_event", self.__button_press_event)
+        self.connect("button_release_event", self.__button_release_event)
+        self.connect("motion-notify-event", self.__mouse_motion)
         self.connect("delete-event", self.__salir)
         self.connect("realize", self.__do_realize)
 
         self.show_all()
         print os.getpid()
+
+    def __button_press_event(self, widget, event):
+        if self.juego:
+            Traduce_button_press_event(event)
+        return False
+
+    def __button_release_event(self, widget, event):
+        if self.juego:
+            Traduce_button_release_event(event)
+        return False
+
+    def __mouse_motion(self, widget, event):
+        if self.juego:
+            MousemotionTraduce(event)
+        return False
+
+    def __key_press_even(self, widget, event):
+        if self.juego:
+            KeyPressTraduce(event)
+        return False
+
+    def __key_release_even(self, widget, event):
+        if self.juego:
+            KeyReleaseTraduce(event)
+        return False
 
     def __reset(self):
         for child in self.get_children():
@@ -50,8 +96,6 @@ class Bichos(gtk.Window):
             self.escenario = Escenario()
             self.escenario.connect("new-size", self.__redraw)
             self.add(self.escenario)
-            xid = self.escenario.get_property('window').xid
-            os.putenv('SDL_WINDOWID', str(xid))
             gobject.idle_add(self.__run_intro)
 
     def __redraw(self, widget, size):
@@ -59,10 +103,19 @@ class Bichos(gtk.Window):
             self.juego.escalar(size)
 
     def __run_intro(self):
+        xid = self.escenario.get_property('window').xid
+        os.putenv('SDL_WINDOWID', str(xid))
         self.juego = Intro()
+        self.juego.connect("exit", self.__salir)
         self.juego.config()
         self.juego.run()
+        '''
+        game_thread = threading.Thread(
+            target=self.juego.run, name='game')
+        game_thread.setDaemon(True)
+        game_thread.start()
         #self.juego.connect("switch", self.__intro_switch)
+        '''
         return False
 
     def do_draw(self, context):
