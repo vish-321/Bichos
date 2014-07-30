@@ -36,29 +36,48 @@ def KeyReleaseTraduce(event):
         pygame.event.post(evt)
 
 
-def MousemotionTraduce(event, coor):
+def MousemotionTraduce(event, rect, res):
     x, y, state = event.window.get_pointer()
     rel = (x, y) # = (x - self.mouse_pos[0], y - self.mouse_pos[1])
-    mouse_pos = (int(x), int(y))
+    #mouse_pos = (int(x), int(y))
     button_state = [
         state & gtk.gdk.BUTTON1_MASK and 1 or 0,
         state & gtk.gdk.BUTTON2_MASK and 1 or 0,
         state & gtk.gdk.BUTTON3_MASK and 1 or 0,
         ]
+
+    px = float(x) * 100.0 / float(rect.width)
+    x = int(float(res[0]) * px / 100.0)
+    py = float(y) * 100.0 / float(rect.height)
+    y = int(float(res[1]) * py / 100.0)
+    mouse_pos = (int(x), int(y))
+
     evt = pygame.event.Event(pygame.MOUSEMOTION,
         pos=mouse_pos, rel=rel, buttons=button_state)
     pygame.event.post(evt)
 
 
-def Traduce_button_press_event(event):
+def Traduce_button_press_event(event, rect, res):
+    x, y = int(event.x), int(event.y)
+    px = float(x) * 100.0 / float(rect.width)
+    x = int(float(res[0]) * px / 100.0)
+    py = float(y) * 100.0 / float(rect.height)
+    y = int(float(res[1]) * py / 100.0)
+    mouse_pos = (int(x), int(y))
+
     evt = pygame.event.Event(pygame.MOUSEBUTTONDOWN,
-        button=event.button, pos=(int(event.x), int(event.y)))
+        button=event.button, pos=mouse_pos)
     pygame.event.post(evt)
 
-
-def Traduce_button_release_event(event):
+def Traduce_button_release_event(event, rect, res):
+    x, y = int(event.x), int(event.y)
+    px = float(x) * 100.0 / float(rect.width)
+    x = int(float(res[0]) * px / 100.0)
+    py = float(y) * 100.0 / float(rect.height)
+    y = int(float(res[1]) * py / 100.0)
+    mouse_pos = (int(x), int(y))
     evt = pygame.event.Event(pygame.MOUSEBUTTONUP,
-        button=event.button, pos=(int(event.x), int(event.y)))
+        button=event.button, pos=mouse_pos)
     pygame.event.post(evt)
 
 

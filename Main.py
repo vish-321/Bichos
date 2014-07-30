@@ -44,29 +44,35 @@ class Bichos(gtk.Window):
 
         self.connect("key-press-event", self.__key_press_even)
         self.connect("key-release-event", self.__key_release_even)
-        #self.connect("button_press_event", self.__button_press_event)
-        #self.connect("button_release_event", self.__button_release_event)
-        #self.connect("motion-notify-event", self.__mouse_motion)
+        self.connect("button_press_event", self.__button_press_event)
+        self.connect("button_release_event", self.__button_release_event)
+        self.connect("motion-notify-event", self.__mouse_motion)
         self.connect("delete-event", self.__salir)
         self.connect("realize", self.__do_realize)
 
         self.show_all()
         print os.getpid()
 
-    #def __button_press_event(self, widget, event):
-    #    if self.juego:
-    #        Traduce_button_press_event(event)
-    #    return False
+    def __button_press_event(self, widget, event):
+        if self.juego:
+            Traduce_button_press_event(event,
+                self.escenario.get_allocation(),
+                self.juego.RESOLUCION_INICIAL)
+        return False
 
-    #def __button_release_event(self, widget, event):
-    #    if self.juego:
-    #        Traduce_button_release_event(event)
-    #    return False
+    def __button_release_event(self, widget, event):
+        if self.juego:
+            Traduce_button_release_event(event,
+                self.escenario.get_allocation(),
+                self.juego.RESOLUCION_INICIAL)
+        return False
 
-    #def __mouse_motion(self, widget, event):
-    #    if self.juego:
-    #        MousemotionTraduce(event, self.juego.RESOLUCION_INICIAL)
-    #    return False
+    def __mouse_motion(self, widget, event):
+        if self.juego:
+            MousemotionTraduce(event,
+                self.escenario.get_allocation(),
+                self.juego.RESOLUCION_INICIAL)
+        return False
 
     def __key_press_even(self, widget, event):
         if self.juego:
