@@ -7,6 +7,7 @@ import pygame
 import gtk
 
 #from CeibalJAM_Lib.JAMElipseButton import JAMElipseButton
+from BiblioJAM.JAMButton import JAMButton
 
 from Bicho import Bicho
 
@@ -27,6 +28,7 @@ class Intro(gobject.GObject):
 
         gobject.GObject.__init__(self)
 
+        self.RESOLUCION_INICIAL = RESOLUCION_INICIAL
         self.resolucionreal = RESOLUCION_INICIAL
         self.ventana_real = False
         self.escenario = False
@@ -77,7 +79,7 @@ class Intro(gobject.GObject):
             print "ERROR"
             #pygame.quit()
 
-    def salir(self):
+    def salir(self, widget=False):
         self.estado = 0
         pygame.quit()
 
@@ -123,51 +125,73 @@ class Intro(gobject.GObject):
         self.ventana = pygame.Surface((RESOLUCION_INICIAL[0],
             RESOLUCION_INICIAL[1]))
         self.ventana_real = pygame.display.get_surface()
-        '''
-        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
-        boton = JAMElipseButton(texto="", tamanio_panel=(200, 130),
-            imagen=path, tamanio_imagen=(127,77))
-		#boton.connect(callback=self.get_creditos,
-		#   sonido_select=self.sonido_select)
-        x = (RESOLUCION_INICIAL[0] / 9) * 4
-        y = (RESOLUCION_INICIAL[1] / 9) * 3
-        boton.set_posicion(punto=(x,y))
-        self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "cucarasims.png")
-        boton = JAMElipseButton(imagen=path, tamanio_imagen=(190,97),
-            texto="", tamanio_panel=(250, 180))
-        #boton.connect(callback=self.get_cucarasims,
-        #   sonido_select=self.sonido_select)
-        x = (RESOLUCION_INICIAL[0] / 9) * 6
-        y = (RESOLUCION_INICIAL[1] / 9) * 1
+        boton = JAMButton("", path, "rectangulo")
+        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.connect(callback=self.salir, sonido_select=None)
+        x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
+        y = 50
         boton.set_posicion(punto=(x,y))
         self.widgets.add(boton)
-        '''
-        '''
-		boton = JAMElipseButton(imagen=bichos_cantores_logo, tamanio_imagen=(128,77), texto="", tamanio_panel=(250, 180))
-		boton.connect(callback=self.get_bichos_cantores, sonido_select=self.sonido_select)
-		x = w*7
-		y = h*3
-		boton.set_posicion(punto=(x,y))
-		self.widgets.add(boton)
 
-		# Boton Salir
-		boton = JAMElipseButton(texto="Salir", tamanio_panel=(200, 130), tamanio_de_letra=50)
-		boton.connect(callback=self.selecciona_mensaje_cerrar, sonido_select=self.sonido_select)
-		x = w*6
-		y = h*5
-		boton.set_posicion(punto=(x,y))
-		self.widgets.add(boton)
+        path = os.path.join(BASE_PATH, "Iconos", "cantores.png")
+        boton = JAMButton("", path, "rectangulo")
+        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.connect(callback=self.salir, sonido_select=None)
+        x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
+        y = 50
+        boton.set_posicion(punto=(x,y))
+        self.widgets.add(boton)
 
-		# Boton Ojos Compuestos
-		boton = JAMElipseButton(texto="", tamanio_panel=(250, 180), imagen=ojos_compuestos_logo, tamanio_imagen=(165,77))
-		boton.connect(callback=self.get_ojos_compuestos, sonido_select=self.sonido_select)
-		x = w*3 + w/2
-		y = h*1 - h/2
-		boton.set_posicion(punto=(x,y))
-		self.widgets.add(boton)
-        '''
+        path = os.path.join(BASE_PATH, "Iconos", "ojos.png")
+        boton = JAMButton("", path, "rectangulo")
+        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.connect(callback=self.salir, sonido_select=None)
+        x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
+        y = 50
+        boton.set_posicion(punto=(x,y))
+        self.widgets.add(boton)
+
+        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
+        boton = JAMButton("", path, "rectangulo")
+        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.connect(callback=self.salir, sonido_select=None)
+        x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
+        y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
+        boton.set_posicion(punto=(x,y))
+        self.widgets.add(boton)
+
+        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
+        boton = JAMButton("", path, "rectangulo")
+        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.connect(callback=self.salir, sonido_select=None)
+        x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
+        y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
+        boton.set_posicion(punto=(x,y))
+        self.widgets.add(boton)
+
+        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
+        boton = JAMButton("", path, "rectangulo")
+        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.connect(callback=self.salir, sonido_select=None)
+        x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
+        y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
+        boton.set_posicion(punto=(x,y))
+        self.widgets.add(boton)
+
         path = os.path.join(BASE_PATH, "Iconos", "bichos.png")
         imagen = pygame.image.load(path)
         titulo = pygame.sprite.Sprite()

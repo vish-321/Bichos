@@ -65,7 +65,7 @@ class Bichos(gtk.Window):
 
     def __mouse_motion(self, widget, event):
         if self.juego:
-            MousemotionTraduce(event)
+            MousemotionTraduce(event, self.juego.RESOLUCION_INICIAL)
         return False
 
     def __key_press_even(self, widget, event):

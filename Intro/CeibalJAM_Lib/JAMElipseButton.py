@@ -35,7 +35,7 @@ COLOR_TEXTO = (0,0,0,1)
 
 # Panel "Base"
 TAMANIO_PANEL = (20,20)#(200, 50)
-COLOR_PANEL = (128, 128 , 128, 1)		
+COLOR_PANEL = (128, 128 , 128, 1)
 COLOR_BORDE_PANEL = (179, 179 , 179, 1)		# Borde exterior del control puede tener otro interno con COLOR_BORDE_RELLENO
 
 # Panel "Relleno"
@@ -102,7 +102,7 @@ class JAMElipseButton(pygame.sprite.Sprite):
 		self.construye_boton()
 		self.recalcular_tamanios()
 		self.set_button()
-	
+
 		self.select = False
 
 	# -------------------- INICIO DE METODOS DE Construcción del Botón -------------------- #
@@ -134,7 +134,7 @@ class JAMElipseButton(pygame.sprite.Sprite):
 					while tamanio[0] > jambasebuton.tamanio_relleno[0]+20 or tamanio[1] > jambasebuton.tamanio_relleno[1]+20:
 					# mientras las dimensiones de la imagen sean mayores a la del botón
 						w, h = tamanio
-						w -= 1 
+						w -= 1
 						h -= 1
 						tamanio = (w,h)
 						# corregido 4-11-2010
@@ -199,7 +199,7 @@ class JAMElipseButton(pygame.sprite.Sprite):
 	def set_button(self):
 	# construye las imagenes definitivas del botón
 		self.Base.posicion_relleno = (self.Base.posicion_relleno[0]+MINI_BORDE*2, self.Base.posicion_relleno[1]+MINI_BORDE*2)
-		pos_x, pos_y = self.Base.relleno.get_rect().center 
+		pos_x, pos_y = self.Base.relleno.get_rect().center
 		pos_x = pos_x - self.Label.rect.w/2 + self.grosor_borde
 		pos_y = pos_y - self.Label.rect.h/2 + self.grosor_borde
 
@@ -324,6 +324,7 @@ class JAMElipseButton(pygame.sprite.Sprite):
 	def update(self):
 	# responde a los eventos del mouse sobre el sprite
 		posicion = pygame.mouse.get_pos()
+		print posicion
 		# Selecciona el botón cuando el mouse pasa encima de él
 		if self.rect.collidepoint(posicion):
 			if self.select == False:
@@ -391,10 +392,10 @@ class JAMElipseBaseButton(pygame.sprite.Sprite):
 
 		# el relleno
 		self.relleno = self.get_surface(color_relleno=color_relleno, color_borde=color_borde_relleno, tamanio_panel=self.tamanio_relleno, grosor_borde=7)
-		
+
 		# construimos el sprite
 		base.blit(self.relleno, self.posicion_relleno)
-	
+
 		# devolvemos el resultado
 		return base
 
@@ -442,7 +443,7 @@ class JAMElipseBaseButton(pygame.sprite.Sprite):
 		if self.sonido_select:
 			self.sonido_select.play()
 
-	
+
 	def update(self):
 	# responde a los eventos del mouse sobre el sprite
 		posicion = pygame.mouse.get_pos()

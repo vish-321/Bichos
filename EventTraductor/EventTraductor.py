@@ -36,7 +36,7 @@ def KeyReleaseTraduce(event):
         pygame.event.post(evt)
 
 
-def MousemotionTraduce(event):
+def MousemotionTraduce(event, coor):
     x, y, state = event.window.get_pointer()
     rel = (x, y) # = (x - self.mouse_pos[0], y - self.mouse_pos[1])
     mouse_pos = (int(x), int(y))
