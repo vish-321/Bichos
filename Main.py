@@ -9,9 +9,6 @@ import gobject
 
 from EventTraductor.EventTraductor import KeyPressTraduce
 from EventTraductor.EventTraductor import KeyReleaseTraduce
-from EventTraductor.EventTraductor import MousemotionTraduce
-from EventTraductor.EventTraductor import Traduce_button_press_event
-from EventTraductor.EventTraductor import Traduce_button_release_event
 
 from Intro.Intro import Intro
 from Widgets import Escenario
@@ -31,48 +28,16 @@ class Bichos(gtk.Window):
         self.set_border_width(2)
         self.set_position(gtk.WIN_POS_CENTER)
 
-        self.set_events(
-            gtk.gdk.KEY_PRESS | gtk.gdk.EXPOSE |
-            gtk.gdk.POINTER_MOTION_MASK | gtk.gdk.POINTER_MOTION_HINT_MASK |
-            gtk.gdk.BUTTON_MOTION_MASK | gtk.gdk.BUTTON_PRESS_MASK |
-            gtk.gdk.BUTTON_RELEASE_MASK)
-
-        self.__button_state = [0, 0, 0]
-        self.__mouse_pos = (0, 0)
-
         self.juego = False
 
         self.connect("key-press-event", self.__key_press_even)
         self.connect("key-release-event", self.__key_release_even)
-        self.connect("button_press_event", self.__button_press_event)
-        self.connect("button_release_event", self.__button_release_event)
-        self.connect("motion-notify-event", self.__mouse_motion)
+
         self.connect("delete-event", self.__salir)
         self.connect("realize", self.__do_realize)
 
         self.show_all()
         print os.getpid()
-
-    def __button_press_event(self, widget, event):
-        if self.juego:
-            Traduce_button_press_event(event,
-                self.escenario.get_allocation(),
-                self.juego.RESOLUCION_INICIAL)
-        return False
-
-    def __button_release_event(self, widget, event):
-        if self.juego:
-            Traduce_button_release_event(event,
-                self.escenario.get_allocation(),
-                self.juego.RESOLUCION_INICIAL)
-        return False
-
-    def __mouse_motion(self, widget, event):
-        if self.juego:
-            MousemotionTraduce(event,
-                self.escenario.get_allocation(),
-                self.juego.RESOLUCION_INICIAL)
-        return False
 
     def __key_press_even(self, widget, event):
         if self.juego:

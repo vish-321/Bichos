@@ -6,6 +6,7 @@ import gobject
 import pygame
 import gtk
 
+from pygame.locals import HWSURFACE
 #from CeibalJAM_Lib.JAMElipseButton import JAMElipseButton
 from BiblioJAM.JAMButton import JAMButton
 
@@ -123,7 +124,7 @@ class Intro(gobject.GObject):
             imagen, RESOLUCION_INICIAL).convert_alpha()
 
         self.ventana = pygame.Surface((RESOLUCION_INICIAL[0],
-            RESOLUCION_INICIAL[1]))
+            RESOLUCION_INICIAL[1]), flags=HWSURFACE)
         self.ventana_real = pygame.display.get_surface()
 
         path = os.path.join(BASE_PATH, "Iconos", "cucarasims.png")
