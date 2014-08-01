@@ -12,6 +12,7 @@ from EventTraductor.EventTraductor import KeyReleaseTraduce
 
 from Intro.Intro import Intro
 from Widgets import Escenario
+from CantaBichos.CantaBichos import CantaBichos
 
 
 class Bichos(gtk.Window):
@@ -64,8 +65,8 @@ class Bichos(gtk.Window):
         if self.juego:
             self.juego.escalar(size)
 
-    def __run_intro(self):
-        xid = self.escenario.get_property('window').xid
+    def __run_intro(self, escenario):
+        xid = escenario.get_property('window').xid
         os.putenv('SDL_WINDOWID', str(xid))
         self.juego = Intro()
         self.juego.connect("exit", self.__salir)
@@ -90,16 +91,24 @@ class Bichos(gtk.Window):
 
         if game == "cucarasims":
             pass
-        print game
+        elif game == "cantores":
+            self.switch(False, 3)
 
     def switch(self, widget, valor):
         self.__reset()
         if valor == 1:
             # Introduccion, opciones de juego.
-            self.escenario = Escenario()
-            self.escenario.connect("new-size", self.__redraw)
-            self.add(self.escenario)
-            gobject.idle_add(self.__run_intro)
+            escenario = Escenario()
+            escenario.connect("new-size", self.__redraw)
+            self.add(escenario)
+            gobject.idle_add(self.__run_intro, escenario)
+        elif valor == 3:
+            # Introduccion, opciones de juego.
+            self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+            escenario = CantaBichos()
+            #self.escenario.connect("new-size", self.__redraw)
+            self.add(escenario)
+            #gobject.idle_add(self.__run_intro)
 
 
 if __name__ == "__main__":
