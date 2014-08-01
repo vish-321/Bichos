@@ -30,6 +30,7 @@ class Bichos(gtk.Window):
         self.set_position(gtk.WIN_POS_CENTER)
 
         self.juego = False
+        self.escenario = False
 
         self.connect("key-press-event", self.__key_press_even)
         self.connect("key-release-event", self.__key_release_even)
@@ -43,6 +44,10 @@ class Bichos(gtk.Window):
     def __key_press_even(self, widget, event):
         if self.juego:
             KeyPressTraduce(event)
+        else:
+            if gtk.gdk.keyval_name(event.keyval) == "Escape":
+                self.escenario.salir()
+                self.switch(False, 1)
         return False
 
     def __key_release_even(self, widget, event):
@@ -54,6 +59,7 @@ class Bichos(gtk.Window):
         for child in self.get_children():
             self.remove(child)
             child.destroy()
+        self.modify_bg(0, gtk.gdk.color_parse("#000000"))
 
     def __do_realize(self, widget):
         self.switch(False, 1)
@@ -98,16 +104,16 @@ class Bichos(gtk.Window):
         self.__reset()
         if valor == 1:
             # Introduccion, opciones de juego.
-            escenario = Escenario()
-            escenario.connect("new-size", self.__redraw)
-            self.add(escenario)
-            gobject.idle_add(self.__run_intro, escenario)
+            self.escenario = Escenario()
+            self.escenario.connect("new-size", self.__redraw)
+            self.add(self.escenario)
+            gobject.idle_add(self.__run_intro, self.escenario)
         elif valor == 3:
             # Introduccion, opciones de juego.
             self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
-            escenario = CantaBichos()
+            self.escenario = CantaBichos()
             #self.escenario.connect("new-size", self.__redraw)
-            self.add(escenario)
+            self.add(self.escenario)
             #gobject.idle_add(self.__run_intro)
 
 

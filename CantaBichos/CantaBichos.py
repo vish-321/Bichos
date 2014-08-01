@@ -5,6 +5,8 @@ import os
 import gtk
 import gobject
 
+from player import Player
+
 BASE_PATH = os.path.dirname(__file__)
 
 
@@ -32,37 +34,73 @@ class CantaBichos(gtk.Table):
 
         self.show_all()
 
+    def get_sounds(self):
+        sounds = 0
+        for child in self.get_children():
+            if child.active:
+                sounds += 1
+        return sounds
 
-class Button(gtk.ToolButton):
+    def salir(self):
+        for child in self.get_children():
+            child.salir()
+
+
+class Button(gtk.EventBox):
 
     def __init__(self, image_path):
 
-        gtk.ToolButton.__init__(self)
+        gtk.EventBox.__init__(self)
 
         self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
 
-        self.active = False
+        audio = "%s.%s" % (os.path.basename(image_path).split(".")[0], "ogg")
+        self.sonido = os.path.join(BASE_PATH, "Sonidos", audio)
+        self.player = Player()
+        self.player.connect("endfile", self.__replay)
+
         self.image_path = image_path
         self.nombre = os.path.basename(self.image_path).split(".")[0]
+        self.active = False
+
+        boton = gtk.ToolButton()
+        boton.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
 
         self.imagen = gtk.Image()
         self.imagen.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
-        self.set_icon_widget(self.imagen)
+        boton.set_icon_widget(self.imagen)
 
-        self.connect("size-allocate", self.__size_request)
-        self.connect("expose-event", self.__redraw)
-        self.connect("clicked", self.__clicked)
+        boton.connect("size-allocate", self.__size_request)
+        boton.connect("expose-event", self.__redraw)
+        boton.connect("clicked", self.__clicked)
 
+        self.add(boton)
         self.show_all()
 
+    def __replay(self, player):
+        if self.player:
+            self.player.stop()
+            self.player.disconnect_by_func(self.__replay)
+            del(self.player)
+            self.player = False
+        self.player = Player()
+        self.player.connect("endfile", self.__replay)
+        self.player.load(self.sonido)
+
     def __clicked(self, widget):
-        self.active = not self.active
-        if self.active:
-            self.modify_bg(0, gtk.gdk.color_parse("#ff0000"))
-            self.imagen.modify_bg(0, gtk.gdk.color_parse("#ff0000"))
-        else:
+        if self.active == False:
+            if self.get_parent().get_sounds() < 8:
+                self.active = True
+                self.modify_bg(0, gtk.gdk.color_parse("#e9b96e"))
+                self.imagen.modify_bg(0, gtk.gdk.color_parse("#e9b96e"))
+                self.player.load(self.sonido)
+            else:
+                print "no puedes activar mas de 8 sonidos simultaneos"
+        elif self.active == True:
+            self.active = False
             self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
             self.imagen.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+            self.player.stop()
 
     def __size_request(self, widget, event):
         rect = self.get_allocation()
@@ -75,3 +113,6 @@ class Button(gtk.ToolButton):
         gobject.idle_add(self.imagen.set_from_pixbuf,
             gtk.gdk.pixbuf_new_from_file_at_size(
             self.image_path, rect.width, -1))
+
+    def salir(self):
+        self.player.stop()
