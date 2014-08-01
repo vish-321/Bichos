@@ -52,6 +52,15 @@ class Intro(gobject.GObject):
     def __emit_go_cucarasims(self, widget):
         self.emit("go", "cucarasims")
 
+    def __emit_go_cantores(self, widget):
+        self.emit("go", "cantores")
+
+    def __emit_go_ojos(self, widget):
+        self.emit("go", "ojos")
+
+    def __emit_go_creditos(self, widget):
+        self.emit("go", "creditos")
+
     def run(self):
         print "Corriendo Intro . . ."
         self.estado = 1
@@ -153,7 +162,7 @@ class Intro(gobject.GObject):
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
         #boton.set_colores(colorbas=(0, 255, 0, 255),
         #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        #boton.connect(callback=self.salir, sonido_select=None)
+        boton.connect(callback=self.__emit_go_cantores, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
         y = 50
         boton.set_posicion(punto=(x, y))
@@ -165,7 +174,7 @@ class Intro(gobject.GObject):
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
         #boton.set_colores(colorbas=(0, 255, 0, 255),
         #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        #boton.connect(callback=self.salir, sonido_select=None)
+        boton.connect(callback=self.__emit_go_ojos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = 50
         boton.set_posicion(punto=(x, y))
@@ -177,7 +186,7 @@ class Intro(gobject.GObject):
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
         #boton.set_colores(colorbas=(0, 255, 0, 255),
         #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        #boton.connect(callback=self.salir, sonido_select=None)
+        boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
         boton.set_posicion(punto=(x, y))
@@ -189,7 +198,7 @@ class Intro(gobject.GObject):
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
         #boton.set_colores(colorbas=(0, 255, 0, 255),
         #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        #boton.connect(callback=self.salir, sonido_select=None)
+        boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
         boton.set_posicion(punto=(x, y))
@@ -201,7 +210,7 @@ class Intro(gobject.GObject):
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
         #boton.set_colores(colorbas=(0, 255, 0, 255),
         #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        #boton.connect(callback=self.salir, sonido_select=None)
+        boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
         boton.set_posicion(punto=(x, y))
