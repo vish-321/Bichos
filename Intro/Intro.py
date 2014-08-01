@@ -7,7 +7,6 @@ import pygame
 import gtk
 
 from pygame.locals import HWSURFACE
-#from CeibalJAM_Lib.JAMElipseButton import JAMElipseButton
 from BiblioJAM.JAMButton import JAMButton
 
 from Bicho import Bicho
@@ -23,7 +22,9 @@ class Intro(gobject.GObject):
 
     __gsignals__ = {
     "exit": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, [])}
+        gobject.TYPE_NONE, []),
+    "go": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self):
 
@@ -46,9 +47,10 @@ class Intro(gobject.GObject):
                 if event.key == pygame.K_ESCAPE:
                     self.emit("exit")
                     return
-            #else:
-            #    print event
         pygame.event.clear()
+
+    def __emit_go_cucarasims(self, widget):
+        self.emit("go", "cucarasims")
 
     def run(self):
         print "Corriendo Intro . . ."
@@ -63,8 +65,9 @@ class Intro(gobject.GObject):
                 self.reloj.tick(35)
                 while gtk.events_pending():
                     gtk.main_iteration()
-                while len(self.sprites.sprites()) < 5:
-                    self.sprites.add(Bicho(RESOLUCION_INICIAL[0],
+                if len(self.sprites.sprites()) < 5:
+                    gobject.idle_add(self.sprites.add,
+                        Bicho(RESOLUCION_INICIAL[0],
                         RESOLUCION_INICIAL[1]))
                 self.sprites.clear(self.ventana, self.escenario)
                 self.widgets.clear(self.ventana, self.escenario)
@@ -73,12 +76,16 @@ class Intro(gobject.GObject):
                 self.__handle_event()
                 self.sprites.draw(self.ventana)
                 self.widgets.draw(self.ventana)
-                self.ventana_real.blit(pygame.transform.scale(self.ventana,
-                    self.resolucionreal), (0, 0))
+                self.ventana_real.blit(pygame.transform.scale(
+                    self.ventana, self.resolucionreal), (0, 0))
                 pygame.display.update()
+                pygame.time.wait(3)
         except:
-            print "ERROR"
-            #pygame.quit()
+            pass
+
+    def stop(self):
+        self.estado = 0
+        pygame.quit()
 
     def salir(self, widget=False):
         self.estado = 0
@@ -91,26 +98,27 @@ class Intro(gobject.GObject):
         pygame.init()
         self.reloj = pygame.time.Clock()
 
-        #from pygame.locals import MOUSEMOTION
-        #from pygame.locals import MOUSEBUTTONUP
-        #from pygame.locals import MOUSEBUTTONDOWN
-        #from pygame.locals import JOYAXISMOTION
-        #from pygame.locals import JOYBALLMOTION
-        #from pygame.locals import JOYHATMOTION
-        #from pygame.locals import JOYBUTTONUP
-        #from pygame.locals import JOYBUTTONDOWN
-        #from pygame.locals import VIDEORESIZE
-        #from pygame.locals import VIDEOEXPOSE
-        #from pygame.locals import USEREVENT
-        #from pygame.locals import QUIT
-        #from pygame.locals import ACTIVEEVENT
-        #from pygame.locals import KEYDOWN
-        #from pygame.locals import KEYUP
+        from pygame.locals import MOUSEMOTION
+        from pygame.locals import MOUSEBUTTONUP
+        from pygame.locals import MOUSEBUTTONDOWN
+        from pygame.locals import JOYAXISMOTION
+        from pygame.locals import JOYBALLMOTION
+        from pygame.locals import JOYHATMOTION
+        from pygame.locals import JOYBUTTONUP
+        from pygame.locals import JOYBUTTONDOWN
+        from pygame.locals import VIDEORESIZE
+        from pygame.locals import VIDEOEXPOSE
+        from pygame.locals import USEREVENT
+        from pygame.locals import QUIT
+        from pygame.locals import ACTIVEEVENT
+        from pygame.locals import KEYDOWN
+        from pygame.locals import KEYUP
 
-        #pygame.event.set_blocked([MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN,
-        #    JOYAXISMOTION, JOYBALLMOTION, JOYHATMOTION, JOYBUTTONUP,
-        #    JOYBUTTONDOWN, ACTIVEEVENT, USEREVENT, KEYDOWN, KEYUP])
-        #pygame.event.set_allowed([QUIT, VIDEORESIZE, VIDEOEXPOSE])
+        pygame.event.set_blocked([
+            JOYAXISMOTION, JOYBALLMOTION, JOYHATMOTION, JOYBUTTONUP,
+            JOYBUTTONDOWN, ACTIVEEVENT, USEREVENT])
+        pygame.event.set_allowed([QUIT, VIDEORESIZE, VIDEOEXPOSE,
+            KEYDOWN, KEYUP, MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN])
         pygame.key.set_repeat(15, 15)
 
         pygame.display.set_mode(
@@ -131,66 +139,72 @@ class Intro(gobject.GObject):
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        #boton.connect(callback=self.salir, sonido_select=None)
+        #boton.set_colores(colorbas=(0, 255, 0, 255),
+        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        boton.connect(callback=self.__emit_go_cucarasims, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
         y = 50
-        boton.set_posicion(punto=(x,y))
+        boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "cantores.png")
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.set_colores(colorbas=(0, 255, 0, 255),
+        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         #boton.connect(callback=self.salir, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
         y = 50
-        boton.set_posicion(punto=(x,y))
+        boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "ojos.png")
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.set_colores(colorbas=(0, 255, 0, 255),
+        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         #boton.connect(callback=self.salir, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = 50
-        boton.set_posicion(punto=(x,y))
+        boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.set_colores(colorbas=(0, 255, 0, 255),
+        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         #boton.connect(callback=self.salir, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
-        boton.set_posicion(punto=(x,y))
+        boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.set_colores(colorbas=(0, 255, 0, 255),
+        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         #boton.connect(callback=self.salir, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
-        boton.set_posicion(punto=(x,y))
+        boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255), colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
+        #boton.set_colores(colorbas=(0, 255, 0, 255),
+        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         #boton.connect(callback=self.salir, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
-        boton.set_posicion(punto=(x,y))
+        boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "bichos.png")

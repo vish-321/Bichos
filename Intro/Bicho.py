@@ -65,7 +65,7 @@ class Bicho(Sprite):
         self.dx, self.dy = self.__get_vector(self.angulo)
         self.__actualizar_posicion()
         self.sonido.set_volume(0.10)
-        self.sonido.play(-1)
+        #self.sonido.play(-1)
 
     def __get_vector(self, angulo):
         radianes = radians(angulo)
@@ -83,17 +83,9 @@ class Bicho(Sprite):
 
     def update(self):
         if self.rect.colliderect(self.escena):
-            #if self.contador > 30:
-            #    sent = random.randrange(1, 3, 1)
-            #    if sent == 1:
-            #        self.angulo -= int(0.7 * INDICE_ROTACION)
-            #    elif sent == 2:
-            #        self.angulo += int(0.7 * INDICE_ROTACION)
-            #    self.contador = 0
-            #self.contador += 1
             self.dx, self.dy = self.__get_vector(self.angulo)
             self.__actualizar_posicion()
         else:
-            self.sonido.stop()
+            #self.sonido.stop()
             self.kill()
             return

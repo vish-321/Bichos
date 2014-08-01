@@ -21,11 +21,11 @@ class Bichos(gtk.Window):
         gtk.Window.__init__(self)
 
         self.set_title("Bichos")
-        self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+        self.modify_bg(0, gtk.gdk.color_parse("#000000"))
         #self.set_icon_from_file(os.path.join(BASE, "Iconos", "bichos.svg"))
         self.set_resizable(True)
         self.set_size_request(640, 480)
-        self.set_border_width(2)
+        #self.set_border_width(2)
         self.set_position(gtk.WIN_POS_CENTER)
 
         self.juego = False
@@ -60,15 +60,6 @@ class Bichos(gtk.Window):
     def __salir(self, widget=None, event=None):
         sys.exit(0)
 
-    def switch(self, widget, valor):
-        self.__reset()
-        if valor == 1:
-            # Introduccion, opciones de juego.
-            self.escenario = Escenario()
-            self.escenario.connect("new-size", self.__redraw)
-            self.add(self.escenario)
-            gobject.idle_add(self.__run_intro)
-
     def __redraw(self, widget, size):
         if self.juego:
             self.juego.escalar(size)
@@ -78,6 +69,7 @@ class Bichos(gtk.Window):
         os.putenv('SDL_WINDOWID', str(xid))
         self.juego = Intro()
         self.juego.connect("exit", self.__salir)
+        self.juego.connect("go", self.__run_games)
         self.juego.config()
         self.juego.run()
         '''
@@ -89,10 +81,25 @@ class Bichos(gtk.Window):
         '''
         return False
 
-    def do_draw(self, context):
-        rect = self.get_allocation()
+    def __run_games(self, intro, game):
         if self.juego:
-            self.juego.escalar((rect.width, rect.height))
+            self.juego.stop()
+            del(self.juego)
+            self.juego = False
+            self.queue_draw()
+
+        if game == "cucarasims":
+            pass
+        print game
+
+    def switch(self, widget, valor):
+        self.__reset()
+        if valor == 1:
+            # Introduccion, opciones de juego.
+            self.escenario = Escenario()
+            self.escenario.connect("new-size", self.__redraw)
+            self.add(self.escenario)
+            gobject.idle_add(self.__run_intro)
 
 
 if __name__ == "__main__":
