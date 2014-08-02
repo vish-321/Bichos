@@ -3,13 +3,12 @@
 
 import pygame
 import gc
-import sys
 import os
 
-#from pygame.locals import *
 gc.enable()
 pygame.font.init()
 import JAMGlobals as VG
+
 
 class JAMLabel(pygame.sprite.Sprite):
 
@@ -24,7 +23,7 @@ class JAMLabel(pygame.sprite.Sprite):
         self.sprite_texto = None
         self.image = None
         self.rect = None
-        self.posicion = (0,0)
+        self.posicion = (0, 0)
 
         self.imagen = {"origen": None, "tamanio": None}
         self.texto = {"tipo": pygame.font.get_default_font(),
@@ -127,7 +126,7 @@ class JAMLabel(pygame.sprite.Sprite):
         Setea la posición de JAMLabel en la pantalla.
         """
         if type(punto) == tuple and len(punto) == 2 and \
-            type(punto[0]) == int and type(punto[1])== int:
+            type(punto[0]) == int and type(punto[1]) == int:
             self.rect.x, self.rect.y = (punto)
             self.posicion = punto
 
@@ -160,7 +159,7 @@ class JAMLabel(pygame.sprite.Sprite):
 
         self.image = superficie
         self.rect = self.image.get_rect()
-        self.set_posicion(self.posicion) # seteo automático de posición
+        self.set_posicion(self.posicion)  # seteo automático de posición
 
     # ------ TEXTO
     def construye_texto(self):
@@ -205,12 +204,12 @@ class JAMLabel(pygame.sprite.Sprite):
         Carga una imagen.
         """
         if self.imagen["tamanio"]:
-            w,h = self.imagen["tamanio"]
+            w, h = self.imagen["tamanio"]
             if w < 20:
                 w = 20
             if h < 20:
                 h = 20
-            self.imagen["tamanio"] = (w,h)
+            self.imagen["tamanio"] = (w, h)
         else:
             imagen = pygame.image.load(self.imagen["origen"])
             self.imagen["tamanio"] = imagen.get_size()
@@ -224,8 +223,8 @@ class JAMLabel(pygame.sprite.Sprite):
         Arma una imagen con Imagen+Texto Concatenados para Formar
         la Cara de JAMLabel.
         """
-        w,h = sprite_imagen.get_size()
-        w1,h1 = sprite_texto.get_size()
+        w, h = sprite_imagen.get_size()
+        w1, h1 = sprite_texto.get_size()
         altura = h
         if h > h1:
             altura = h
@@ -297,7 +296,7 @@ class JAMLabel(pygame.sprite.Sprite):
             print k, "\n"
 
 
-# ----- FIN DE CLASE JAMLabel - INICIO DE DEBUG Y EJEMPLO DE LA CLASE -----
+'''
 class Ejemplo(object):
 
     def __init__(self):
@@ -325,13 +324,13 @@ class Ejemplo(object):
             cambios = []
             self.widgets.clear(self.ventana, self.fondo)
             if contador == 50:
-                # Activa la siguiente línea para provocar cambios de texto en JAMLabel
+                # Activa provocar cambios de texto en JAMLabel
                 contador = self.ejemplo_cambia_texto_en_Label()
-                # Activa la siguiente línea para provocar cambios de imagen en JAMLabel
+                # Activa  provocar cambios de imagen en JAMLabel
                 contador = self.ejemplo_cambia_imagen_en_Label()
-                # Activa la siguiente línea para provocar cambios de contenedor en JAMLabel
+                # Activa  para provocar cambios de contenedor en JAMLabel
                 contador = self.ejemplo_cambia_contenedor_en_Label()
-                # Activa la siguiente línea para provocar cambios de posicion en JAMLabel
+                # Activa  para provocar cambios de posicion en JAMLabel
                 contador = self.ejemplo_cambia_posicion_en_Label()
 
             self.widgets.update()
@@ -454,3 +453,4 @@ class Ejemplo(object):
 
 if __name__ == "__main__":
     Ejemplo()
+'''

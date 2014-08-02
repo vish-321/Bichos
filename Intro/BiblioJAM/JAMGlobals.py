@@ -3,213 +3,339 @@
 
 import pygame
 import gc
-import sys
 import os
-import platform
+#import platform
 
-from pygame.locals import HWSURFACE
 gc.enable()
 
-'''
-if "olpc" in platform.platform():
-    os.environ['SDL_AUDIODRIVER'] = 'alsa'
+#if "olpc" in platform.platform():
+#    os.environ['SDL_AUDIODRIVER'] = 'alsa'
 
-if not pygame.mixer.get_init():
-    pygame.mixer.pre_init(44100, -16, 2, 2048)
-    pygame.mixer.init(44100, -16, 2, 2048)'''
+#if not pygame.mixer.get_init():
+#    pygame.mixer.pre_init(44100, -16, 2, 2048)
+#    pygame.mixer.init(44100, -16, 2, 2048)
 
-#pygame.init()
 
-DIRECTORIO_BIBLIOJAM= os.path.dirname(__file__)
+DIRECTORIO_BIBLIOJAM = os.path.dirname(__file__)
+
 
 # fuentes
 def get_Font_fawn():
     return (DIRECTORIO_BIBLIOJAM + "/Recursos/Fuentes/fawn.ttf", 43)
+
+
 def get_Font_KOMIKND():
     return (DIRECTORIO_BIBLIOJAM + "/Recursos/Fuentes/KOMIKND.ttf", 43)
+
 
 # COLORES
 def get_magenta():
     return (255, 0, 255, 255)
+
+
 def get_blanco():
-    return (255,255,255,255)
+    return (255, 255, 255, 255)
+
+
 def get_negro():
-    return (0,0,0,255)
+    return (0, 0, 0, 255)
+
+
 def get_gris1():
-    return (128,128,128,255)
+    return (128, 128, 128, 255)
+
+
 def get_naranja1():
-    return (240,150,0,255)
+    return (240, 150, 0, 255)
+
+
 def get_celeste1():
-    return (0,240,240,255)
+    return (0, 240, 240, 255)
+
+
 def get_celeste_pastel_claro1():
-    return (220,255,255,255)
+    return (220, 255, 255, 255)
+
+
 def get_celeste_cielo1():
-    return (51,121,183,255)
+    return (51, 121, 183, 255)
+
+
 def get_celeste_cielo2():
-    return (37,115,177,255)
+    return (37, 115, 177, 255)
+
+
 def get_celeste_cielo3():
-    return (91,152,209,255)
+    return (91, 152, 209, 255)
+
+
 def get_celeste_cielo4():
-    return (206,229,237,255)
+    return (206, 229, 237, 255)
+
+
 def get_rojo1():
-    return (255,0,0,255)
+    return (255, 0, 0, 255)
+
+
 def get_amarillo1():
-    return (255,255,0,255)
+    return (255, 255, 0, 255)
+
+
 def get_verde1():
-    return (0,183,0,255)
+    return (0, 183, 0, 255)
+
+
 def get_bordo1():
-    return (178,0,0,255)
+    return (178, 0, 0, 255)
+
+
 def get_azul1():
-    return (55,93,237,255)
-def get_rojo1():
-    return (255,0,0,255)
+    return (55, 93, 237, 255)
+
 
 # DE BiblioJAM
 def get_jamimagenes():
-    ''' Devuelve las imágenes de BiblioJAM. '''
-    return (DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/CeibalJAM.png", DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/bandera_uruguay.png",
-    DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/licencia.png")
+    """
+    Devuelve las imágenes de BiblioJAM.
+    """
+    return (DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/CeibalJAM.png",
+        DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/bandera_uruguay.png",
+        DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/licencia.png")
+
+
 def get_terron():
-    ''' Devuelve Terron de CeibalJAM! '''
+    """
+    Devuelve Terron de CeibalJAM!
+    """
     return DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/icono_jam.png"
 
+
 def get_sound_select():
-    ''' Carga y Devuelve el sonido "select" de BiblioJAM para JAMButton '''
+    """
+    Carga y Devuelve el sonido "select" de BiblioJAM para JAMButton
+    """
     #pygame.mixer.init()
-    return pygame.mixer.Sound(DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/select.ogg")
+    return pygame.mixer.Sound(
+        DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/select.ogg")
+
+
 def get_sound_clock_tick1():
-    ''' Carga y Devuelve el sonido "clock1" de BiblioJAM. '''
+    """
+    Carga y Devuelve el sonido "clock1" de BiblioJAM.
+    """
     #pygame.mixer.init()
-    return pygame.mixer.Sound(DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/clock_tick1.ogg")
+    return pygame.mixer.Sound(
+        DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/clock_tick1.ogg")
+
+
 def get_alarma_reloj1():
-    ''' Carga y Devuelve el sonido "alarma-reloj1" de BiblioJAM. '''
+    """
+    Carga y Devuelve el sonido "alarma-reloj1" de BiblioJAM.
+    """
     #pygame.mixer.init()
-    return pygame.mixer.Sound(DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/alarma-reloj1.ogg")
+    return pygame.mixer.Sound(
+        DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/alarma-reloj1.ogg")
+
+
 def get_alarma_reloj2():
-    ''' Carga y Devuelve el sonido "alarma-reloj2" de BiblioJAM. '''
+    """
+    Carga y Devuelve el sonido "alarma-reloj2" de BiblioJAM.
+    """
     #pygame.mixer.init()
-    return pygame.mixer.Sound(DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/alarma-reloj2.ogg")
+    return pygame.mixer.Sound(
+        DIRECTORIO_BIBLIOJAM + "/Recursos/Sonidos/alarma-reloj2.ogg")
+
 
 # ICONOS
 def get_icon_back():
-    ''' Devuelve las imágenes para botones atras, delante, play y salir. '''
-    atras= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/anterior.png"
+    """
+    Devuelve las imágenes para botones atras, delante, play y salir.
+    """
+    atras = DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/anterior.png"
     return atras
+
+
 def get_icon_next():
-    ''' Devuelve las imágenes para botones atras, delante, play y salir. '''
-    delante= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/siguiente.png"
+    """
+    Devuelve las imágenes para botones atras, delante, play y salir.
+    """
+    delante = DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/siguiente.png"
     return delante
+
+
 def get_icon_play():
-    ''' Devuelve las imágenes para botones atras, delante, play y salir. '''
-    play= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/play.png"
+    """
+    Devuelve las imágenes para botones atras, delante, play y salir.
+    """
+    play = DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/play.png"
     return play
+
+
 def get_icon_exit():
-    ''' Devuelve las imágenes para botones atras, delante, play y salir. '''
-    salir= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/cerrar.png"
+    """
+    Devuelve las imágenes para botones atras, delante, play y salir.
+    """
+    salir = DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/cerrar.png"
     return salir
+
+
 #def get_icon_stop():
 #	''' Devuelve las imágenes para botones atras, delante, play y salir. '''
 #	stop= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos/??.png"
 #	return stop
+
+
 def get_icon_ok():
-    ''' Devuelve las imágenes para botones ok y cancel. '''
-    ok= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos    ick_ok.png"
+    """
+    Devuelve las imágenes para botones ok y cancel.
+    """
+    ok = DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos    ick_ok.png"
     return ok
+
+
 def get_icon_cancel():
-    ''' Devuelve las imágenes para botones ok y cancel. '''
-    cancel= DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos    ick_cancel.png"
+    """
+    Devuelve las imágenes para botones ok y cancel.
+    """
+    cancel = DIRECTORIO_BIBLIOJAM + "/Recursos/Iconos    ick_cancel.png"
     return cancel
+
 
 # IMAGENES Y SUPERFICIES
 def get_Rectangulo(color, tamanio):
-    ''' Devuelve una superficie según color y tamaño. '''
-    superficie = pygame.Surface( tamanio, flags=HWSURFACE )
+    """
+    Devuelve una superficie según color y tamaño.
+    """
+    from pygame.locals import HWSURFACE
+    superficie = pygame.Surface(tamanio, flags=HWSURFACE)
     superficie.fill(color)
     return superficie
+
+
 def get_Rectangulo_Transparente(tamanio):
-    ''' Devuelve una superficie según color y tamaño. '''
-    superficie = pygame.Surface( tamanio, flags=HWSURFACE )
+    """
+    Devuelve una superficie según color y tamaño.
+    """
+    from pygame.locals import HWSURFACE
+    superficie = pygame.Surface(tamanio, flags=HWSURFACE)
     superficie.fill(get_magenta())
     superficie.set_colorkey(get_magenta(), pygame.RLEACCEL)
     return superficie
+
+
 def get_my_surface_whit_border(superficie, color, grosor):
-    ''' Pinta un Borde Rectangular sobre una superficie y devuelve el resultado. '''
+    """
+    Pinta un Borde Rectangular sobre una superficie y devuelve el resultado.
+    """
     pygame.draw.rect(superficie, color, superficie.get_rect(), grosor)
     return superficie
+
+
 def get_Elipse(color, tamanio):
-    ''' Devuelve una Elipse según color y tamaño. '''
-    superficie = pygame.Surface( tamanio, flags=HWSURFACE )
+    """
+    Devuelve una Elipse según color y tamaño.
+    """
+    from pygame.locals import HWSURFACE
+    superficie = pygame.Surface(tamanio, flags=HWSURFACE)
     superficie.fill(get_magenta())
     superficie.set_colorkey(get_magenta(), pygame.RLEACCEL)
     rectangulo = (0, 0, tamanio[0], tamanio[1])
     pygame.draw.ellipse(superficie, color, rectangulo, 0)
     return superficie
+
+
 def get_my_surface_whit_elipse_border(superficie, color, grosor):
-    ''' Pinta un Borde Eliptico sobre una superficie y devuelve el resultado. '''
+    """
+    Pinta un Borde Eliptico sobre una superficie y devuelve el resultado.
+    """
     try:
-        rectangulo= (0,0,superficie.get_size()[0],superficie.get_size()[1])
+        rectangulo = (0, 0,
+            superficie.get_size()[0], superficie.get_size()[1])
         pygame.draw.ellipse(superficie, color, rectangulo, int(grosor))
         return superficie
     except:
         print rectangulo, color, grosor
+
+
 def pegar_imagenes_centradas(superficie1, superficie2):
-    ''' Pega superficie1 sobre superficie2. '''
-    w,h= superficie2.get_size()
-    w1,h1= superficie1.get_size()
-    superficie2.blit(superficie1, (w/2-w1/2, h/2-h1/2))
-    return superficie2
-def pegar_imagenes_alineado_izquierda(superficie1, superficie2):
-    ''' Pega superficie1 sobre superficie2. '''
-    w,h= superficie2.get_size()
-    w1,h1= superficie1.get_size()
-    superficie2.blit(superficie1, (0, h/2-h1/2))
-    return superficie2
-def pegar_imagenes_alineado_derecha(superficie1, superficie2):
-    ''' Pega superficie1 sobre superficie2. '''
-    w,h= superficie2.get_size()
-    w1,h1= superficie1.get_size()
-    superficie2.blit(superficie1, (w-w1, h/2-h1/2))
+    """
+    Pega superficie1 sobre superficie2.
+    """
+    w, h = superficie2.get_size()
+    w1, h1 = superficie1.get_size()
+    superficie2.blit(superficie1, (w / 2 - w1 / 2, h / 2 - h1 / 2))
     return superficie2
 
-def get_grilla(superficie, columnas, filas): # Utilizado por JAMBoard
-    ''' Devuelve una lista de posiciones en una superficie, según columnas y filas. '''
-    ancho, alto= superficie.get_size()
-    cuadros= ancho/columnas
-    posiciones= []
+
+def pegar_imagenes_alineado_izquierda(superficie1, superficie2):
+    """
+    Pega superficie1 sobre superficie2.
+    """
+    w, h = superficie2.get_size()
+    w1, h1 = superficie1.get_size()
+    superficie2.blit(superficie1, (0, h / 2 - h1 / 2))
+    return superficie2
+
+
+def pegar_imagenes_alineado_derecha(superficie1, superficie2):
+    """
+    Pega superficie1 sobre superficie2.
+    """
+    w, h = superficie2.get_size()
+    w1, h1 = superficie1.get_size()
+    superficie2.blit(superficie1, (w - w1, h / 2 - h1 / 2))
+    return superficie2
+
+
+def get_grilla(superficie, columnas, filas):  # Utilizado por JAMBoard
+    """
+    Devuelve una lista de posiciones en una superficie, según columnas y filas.
+    """
+    ancho, alto = superficie.get_size()
+    cuadros = ancho / columnas
+    posiciones = []
     for f in range(0, filas):
         for x in range(0, columnas):
-            posiciones.append( (cuadros*x, cuadros*f) )
+            posiciones.append((cuadros * x, cuadros * f))
     return posiciones
 
+
 def get_matriz_rect(lado, colum, filas):
-    ''' Devuelve una lista de columnas:
-        que contiene cuadrados iguales. '''
-    x,y= (0,0)
-    columnas= []
+    """
+    Devuelve una lista de columnas:
+        que contiene cuadrados iguales.
+    """
+    x, y = (0, 0)
+    columnas = []
     for col in range(colum):
     # para todas las columnas
 
-        fila= []
+        fila = []
         for rect in range(filas):
         # para todas las filas
-            rectangulo= pygame.rect.Rect(x,y,lado,lado)
+            rectangulo = pygame.rect.Rect(x, y, lado, lado)
             fila.append(rectangulo)
-            y+= lado
+            y += lado
 
         columnas.append(fila)
-        x+= lado
-        y= 0
+        x += lado
+        y = 0
 
     return columnas
 
-def get_cuadricula(superficie, columnas, filas): # Utilizado por JAMClock
-    ''' Devuelve una lista de rectángulos en una superficie, según columnas y filas. '''
-    ancho, alto= superficie.get_size()
-    cuadros= ancho/columnas
-    rectangulos= []
+
+def get_cuadricula(superficie, columnas, filas):  # Utilizado por JAMClock
+    """
+    Devuelve una lista de rectángulos en una superficie,
+    según columnas y filas.
+    """
+    ancho, alto = superficie.get_size()
+    cuadros = ancho / columnas
+    rectangulos = []
     for f in range(0, filas):
         for x in range(0, columnas):
-            rectangulos.append( (cuadros*x, cuadros*f, ancho/columnas, alto/filas) )
+            rectangulos.append((
+                cuadros * x, cuadros * f, ancho / columnas, alto / filas))
     return rectangulos
 
 
@@ -217,24 +343,41 @@ def get_cuadricula(superficie, columnas, filas): # Utilizado por JAMClock
 def get_letras_up():
     return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
         'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+
 def get_tildes_up():
     return ['Á', 'É', 'Í', 'Ó', 'Ú']
+
+
 def get_letras_down():
     return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
         'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
+
 def get_tildes_down():
     return ['á', 'é', 'í', 'ó', 'ú']
+
+
 def get_numeros():
-    return ['1','2','3','4','5','6','7','8','9','0']
+    return ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+
+
 def get_simbols():
     return ['^', '_', '~', '|', '\\', '#', '$', '€', '&', '@', '%', 'ª', 'º',
         '·', '¡', '!', '¿', '?', '\'', '\"', '(', ')', '{', '}', '[', ']']
+
+
 def get_otros():
     return [',', '.', ':', ';', '<', '>']
+
+
 def get_matematicas():
     return ['*', '+', '-', '/', '=']
+
+
 def get_especiales():
     return ['´', "Espacio", "Borrar", "Enter"]
+
 
 # Seteos automáticos para JAMButton.
 def get_default_jambutton_values():
@@ -280,7 +423,7 @@ def get_calendar(mes, anio):
     for i in (semanas):
         todalasemana = []
         for fecha in i:
-            if int(fecha)!= 0:
+            if int(fecha) != 0:
                 todalasemana.append(fecha)
         toodoelmes.append(todalasemana)
     #toodoelmes.insert(0, ["%s de %s" % (get_abrevia_mes(mes), anio)])
@@ -395,7 +538,7 @@ def get_nube():
         DIRECTORIO_BIBLIOJAM + "/Recursos/Nubes/nube1.png")
     # pygame.transform.scale(
     # pygame.image.load(
-    #   DIRECTORIO_BIBLIOJAM + "/Recursos/Nubes/001.png"), (125,125))
+    #   DIRECTORIO_BIBLIOJAM + "/Recursos/Nubes/001.png"), (125, 125))
     return imagen
 
 
@@ -437,12 +580,13 @@ def get_hoja(escala):
     if type(escala) == tuple and type(
         escala[0]) == int and type(escala[1]) == int:
         imagen = pygame.transform.scale(imagen, escala)
-    w,h = imagen.get_size()
-    margen = w/10
+    w, h = imagen.get_size()
+    margen = w / 10
     return imagen, margen
 
 
 def get_Sombra(tamanio, color, opacidad):
+    from pygame.locals import SRCALPHA
     x = pygame.sprite.OrderedUpdates()
     sombra = pygame.sprite.Sprite()
     sombra.image = get_Rectangulo(color, tamanio)

@@ -98,7 +98,7 @@ class Button(gtk.EventBox):
                 self.imagen.modify_bg(0, gtk.gdk.color_parse("#e9b96e"))
                 self.player.load(self.sonido)
             else:
-                dialog = Dialog()
+                dialog = Dialog(parent=self.get_toplevel())
                 dialog.run()
 
         elif self.active == True:
