@@ -13,6 +13,7 @@ from EventTraductor.EventTraductor import KeyReleaseTraduce
 from Intro.Intro import Intro
 from Widgets import Escenario
 from CantaBichos.CantaBichos import CantaBichos
+from CucaraSims.CucaraSims import CucaraSimsWidget
 
 
 class Bichos(gtk.Window):
@@ -22,7 +23,7 @@ class Bichos(gtk.Window):
         gtk.Window.__init__(self)
 
         self.set_title("Bichos")
-        self.modify_bg(0, gtk.gdk.color_parse("#000000"))
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
         #self.set_icon_from_file(os.path.join(BASE, "Iconos", "bichos.svg"))
         self.set_resizable(True)
         self.set_size_request(640, 480)
@@ -30,7 +31,7 @@ class Bichos(gtk.Window):
         self.set_position(gtk.WIN_POS_CENTER)
 
         self.juego = False
-        self.escenario = False
+        self.widgetjuego = False
 
         self.connect("key-press-event", self.__key_press_even)
         self.connect("key-release-event", self.__key_release_even)
@@ -46,7 +47,7 @@ class Bichos(gtk.Window):
             KeyPressTraduce(event)
         else:
             if gtk.gdk.keyval_name(event.keyval) == "Escape":
-                self.escenario.salir()
+                self.widgetjuego.salir()
                 self.switch(False, 1)
         return False
 
@@ -54,12 +55,6 @@ class Bichos(gtk.Window):
         if self.juego:
             KeyReleaseTraduce(event)
         return False
-
-    def __reset(self):
-        for child in self.get_children():
-            self.remove(child)
-            child.destroy()
-        self.modify_bg(0, gtk.gdk.color_parse("#000000"))
 
     def __do_realize(self, widget):
         self.switch(False, 1)
@@ -94,27 +89,37 @@ class Bichos(gtk.Window):
             del(self.juego)
             self.juego = False
             self.queue_draw()
-
         if game == "cucarasims":
-            pass
+            self.switch(False, 2)
         elif game == "cantores":
             self.switch(False, 3)
 
     def switch(self, widget, valor):
-        self.__reset()
+        for child in self.get_children():
+            self.remove(child)
+            child.destroy()
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+
         if valor == 1:
             # Introduccion, opciones de juego.
-            self.escenario = Escenario()
-            self.escenario.connect("new-size", self.__redraw)
-            self.add(self.escenario)
-            gobject.idle_add(self.__run_intro, self.escenario)
+            self.widgetjuego = Escenario()
+            self.widgetjuego.connect("new-size", self.__redraw)
+            self.add(self.widgetjuego)
+            gobject.idle_add(self.__run_intro, self.widgetjuego)
+        elif valor == 2:
+            self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+            self.widgetjuego = CucaraSimsWidget()
+            escenario = Escenario()
+            #escenario.modify_bg(
+            #    gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+            escenario.connect("new-size", self.__redraw)
+            self.widgetjuego.pack1(escenario, resize=False, shrink=False)
+            self.add(self.widgetjuego)
+            #gobject.idle_add(self.__run_cucarasims, self.widgetjuego)
         elif valor == 3:
-            # Introduccion, opciones de juego.
-            self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
-            self.escenario = CantaBichos()
-            #self.escenario.connect("new-size", self.__redraw)
-            self.add(self.escenario)
-            #gobject.idle_add(self.__run_intro)
+            self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+            self.widgetjuego = CantaBichos()
+            self.add(self.widgetjuego)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ class CantaBichos(gtk.Table):
 
         print "Corriendo Canta Bichos . . ."
 
-        self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
         self.set_property("column-spacing", 2)
         self.set_property("row-spacing", 2)
         self.set_border_width(2)
@@ -55,7 +55,7 @@ class Button(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(0, gtk.gdk.color_parse("#778899"))
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#778899"))
 
         audio = "%s.%s" % (os.path.basename(image_path).split(".")[0], "ogg")
         self.sonido = os.path.join(BASE_PATH, "Sonidos", audio)
@@ -67,10 +67,10 @@ class Button(gtk.EventBox):
         self.active = False
 
         boton = gtk.ToolButton()
-        boton.modify_bg(0, gtk.gdk.color_parse("#778899"))
+        boton.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#778899"))
 
         self.imagen = gtk.Image()
-        self.imagen.modify_bg(0, gtk.gdk.color_parse("#778899"))
+        self.imagen.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#778899"))
         boton.set_icon_widget(self.imagen)
 
         boton.connect("size-allocate", self.__size_request)
@@ -94,8 +94,10 @@ class Button(gtk.EventBox):
         if self.active == False:
             if self.get_parent().get_sounds() < 8:
                 self.active = True
-                self.modify_bg(0, gtk.gdk.color_parse("#e9b96e"))
-                self.imagen.modify_bg(0, gtk.gdk.color_parse("#e9b96e"))
+                self.modify_bg(
+                    gtk.STATE_NORMAL, gtk.gdk.color_parse("#e9b96e"))
+                self.imagen.modify_bg(
+                    gtk.STATE_NORMAL, gtk.gdk.color_parse("#e9b96e"))
                 self.player.load(self.sonido)
             else:
                 dialog = Dialog(parent=self.get_toplevel())
@@ -103,8 +105,10 @@ class Button(gtk.EventBox):
 
         elif self.active == True:
             self.active = False
-            self.modify_bg(0, gtk.gdk.color_parse("#778899"))
-            self.imagen.modify_bg(0, gtk.gdk.color_parse("#778899"))
+            self.modify_bg(
+                gtk.STATE_NORMAL, gtk.gdk.color_parse("#778899"))
+            self.imagen.modify_bg(
+                gtk.STATE_NORMAL, gtk.gdk.color_parse("#778899"))
             self.player.stop()
 
     def __size_request(self, widget, event):
