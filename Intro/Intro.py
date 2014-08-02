@@ -93,8 +93,7 @@ class Intro(gobject.GObject):
             pass
 
     def stop(self):
-        self.estado = 0
-        pygame.quit()
+        self.salir()
 
     def salir(self, widget=False):
         self.estado = 0

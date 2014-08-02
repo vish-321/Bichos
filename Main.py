@@ -14,6 +14,7 @@ from Intro.Intro import Intro
 from Widgets import Escenario
 from CantaBichos.CantaBichos import CantaBichos
 from CucaraSims.CucaraSims import CucaraSimsWidget
+from CucaraSims.Juego import CucaraSims
 
 
 class Bichos(gtk.Window):
@@ -83,13 +84,24 @@ class Bichos(gtk.Window):
         '''
         return False
 
+    def __run_cucarasims(self, escenario):
+        xid = escenario.get_property('window').xid
+        os.putenv('SDL_WINDOWID', str(xid))
+        self.juego = CucaraSims()
+        self.juego.connect("exit", self.__run_games, "menu")
+        self.juego.config()
+        self.juego.run()
+        return False
+
     def __run_games(self, intro, game):
         if self.juego:
             self.juego.stop()
             del(self.juego)
             self.juego = False
             self.queue_draw()
-        if game == "cucarasims":
+        if game == "menu":
+            self.switch(False, 1)
+        elif game == "cucarasims":
             self.switch(False, 2)
         elif game == "cantores":
             self.switch(False, 3)
@@ -115,7 +127,7 @@ class Bichos(gtk.Window):
             escenario.connect("new-size", self.__redraw)
             self.widgetjuego.pack1(escenario, resize=False, shrink=False)
             self.add(self.widgetjuego)
-            #gobject.idle_add(self.__run_cucarasims, self.widgetjuego)
+            gobject.idle_add(self.__run_cucarasims, escenario)
         elif valor == 3:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
             self.widgetjuego = CantaBichos()
