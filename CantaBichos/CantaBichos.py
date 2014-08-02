@@ -19,6 +19,9 @@ class CantaBichos(gtk.Table):
         print "Corriendo Canta Bichos . . ."
 
         self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+        self.set_property("column-spacing", 2)
+        self.set_property("row-spacing", 2)
+        self.set_border_width(2)
 
         archivos = []
         for arch in os.listdir(os.path.join(BASE_PATH, "Imagenes")):
@@ -52,7 +55,7 @@ class Button(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+        self.modify_bg(0, gtk.gdk.color_parse("#778899"))
 
         audio = "%s.%s" % (os.path.basename(image_path).split(".")[0], "ogg")
         self.sonido = os.path.join(BASE_PATH, "Sonidos", audio)
@@ -64,10 +67,10 @@ class Button(gtk.EventBox):
         self.active = False
 
         boton = gtk.ToolButton()
-        boton.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+        boton.modify_bg(0, gtk.gdk.color_parse("#778899"))
 
         self.imagen = gtk.Image()
-        self.imagen.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+        self.imagen.modify_bg(0, gtk.gdk.color_parse("#778899"))
         boton.set_icon_widget(self.imagen)
 
         boton.connect("size-allocate", self.__size_request)
@@ -95,11 +98,13 @@ class Button(gtk.EventBox):
                 self.imagen.modify_bg(0, gtk.gdk.color_parse("#e9b96e"))
                 self.player.load(self.sonido)
             else:
-                print "no puedes activar mas de 8 sonidos simultaneos"
+                dialog = Dialog()
+                dialog.run()
+
         elif self.active == True:
             self.active = False
-            self.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
-            self.imagen.modify_bg(0, gtk.gdk.color_parse("#ffffff"))
+            self.modify_bg(0, gtk.gdk.color_parse("#778899"))
+            self.imagen.modify_bg(0, gtk.gdk.color_parse("#778899"))
             self.player.stop()
 
     def __size_request(self, widget, event):
@@ -116,3 +121,21 @@ class Button(gtk.EventBox):
 
     def salir(self):
         self.player.stop()
+
+
+class Dialog(gtk.Dialog):
+
+    def __init__(self, parent=None):
+
+        gtk.Dialog.__init__(self, parent=parent)
+
+        self.set_decorated(False)
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        self.set_border_width(15)
+
+        label = gtk.Label("No Puedes Activar mas de 8 Sonidos Simultaneos")
+
+        self.vbox.pack_start(label, True, True, 0)
+        self.vbox.show_all()
+
+        gobject.timeout_add(3000, self.destroy)
