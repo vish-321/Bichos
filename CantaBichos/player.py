@@ -25,7 +25,7 @@ import pygst
 import gst
 import gtk
 
-#gobject.threads_init()
+gobject.threads_init()
 #gtk.gdk.threads_init()
 
 
