@@ -37,9 +37,14 @@ class Bicho(Sprite):
         self.rect = self.image.get_rect()
 
         sounds = []
-        dirpath = os.path.join(BASE_PATH, "Sonidos")
-        for archivo in os.listdir(dirpath):
-            sounds.append(os.path.join(dirpath, archivo))
+        dirpath = os.path.join(BASE_PATH, "CantaBichos", "Sonidos")
+        sonidos = [
+            "01", "04", "07", "09", "12",
+            "14", "16", "19", "21", "25", "29",
+            "02", "05", "08", "10", "13", "15",
+            "18", "20", "22", "28", "30"]
+        for sonido in sonidos:
+            sounds.append(os.path.join(dirpath, "%s.ogg" % sonido))
 
         random.seed()
         path = random.choice(sounds)
@@ -65,7 +70,7 @@ class Bicho(Sprite):
         self.dx, self.dy = self.__get_vector(self.angulo)
         self.__actualizar_posicion()
         self.sonido.set_volume(0.10)
-        #self.sonido.play(-1)
+        self.sonido.play(-1)
 
     def __get_vector(self, angulo):
         radianes = radians(angulo)
@@ -86,6 +91,6 @@ class Bicho(Sprite):
             self.dx, self.dy = self.__get_vector(self.angulo)
             self.__actualizar_posicion()
         else:
-            #self.sonido.stop()
+            self.sonido.stop()
             self.kill()
             return

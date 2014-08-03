@@ -121,7 +121,7 @@ class CucaraSims(gobject.GObject):
 
         pygame.display.set_caption("CucaraSims")
 
-        path = os.path.join(BASE_PATH, "Fondos", "arena1.png")
+        path = os.path.join(BASE_PATH, "CucaraSims", "Imagenes", "arena1.png")
         imagen = pygame.image.load(path)
         self.escenario = pygame.transform.scale(
             imagen, RESOLUCION_INICIAL).convert_alpha()
