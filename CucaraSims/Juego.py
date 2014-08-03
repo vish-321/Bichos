@@ -5,11 +5,11 @@ import os
 import gobject
 import pygame
 import gtk
+import random
 
 from pygame.locals import HWSURFACE
 from Cucaracha import Cucaracha
-
-#from Bicho import Bicho
+from Timer import Timer
 
 RESOLUCION_INICIAL = (800, 600)
 BASE_PATH = os.path.dirname(__file__)
@@ -35,6 +35,7 @@ class CucaraSims(gobject.GObject):
         self.ventana = False
         self.reloj = False
         self.estado = 0
+        self.timer = False
 
         self.cucas = pygame.sprite.RenderUpdates()
         #self.widgets = pygame.sprite.RenderUpdates()
@@ -46,6 +47,13 @@ class CucaraSims(gobject.GObject):
                     self.emit("exit")
                     return
         pygame.event.clear()
+
+    def __stop_timer(self, objeto):
+        objeto.morir()
+
+    def __update_time(self, widget, _dict):
+        #print _dict
+        pass
 
     def run(self):
         print "Corriendo CucaraSims . . ."
@@ -78,8 +86,11 @@ class CucaraSims(gobject.GObject):
         except:
             pass
 
+
     def salir(self, widget=False):
         self.estado = 0
+        self.timer.salir()
+        map(self.__stop_timer, self.cucas)
         pygame.quit()
 
     def escalar(self, resolucion):
@@ -126,11 +137,21 @@ class CucaraSims(gobject.GObject):
             RESOLUCION_INICIAL[1]), flags=HWSURFACE)
         self.ventana_real = pygame.display.get_surface()
 
-        self.cucas.add(Cucaracha("macho", RESOLUCION_INICIAL[0],
-            RESOLUCION_INICIAL[1]))
-        self.cucas.add(Cucaracha("macho", RESOLUCION_INICIAL[0],
-            RESOLUCION_INICIAL[1]))
-        self.cucas.add(Cucaracha("hembra", RESOLUCION_INICIAL[0],
-            RESOLUCION_INICIAL[1]))
-        self.cucas.add(Cucaracha("hembra", RESOLUCION_INICIAL[0],
-            RESOLUCION_INICIAL[1]))
+        self.timer = Timer(1)  # 1 segundo == 1 hora
+        self.timer.connect("new-time", self.__update_time)
+
+        for x in range (2):
+            cucaracha = Cucaracha("macho", RESOLUCION_INICIAL[0],
+                RESOLUCION_INICIAL[1])
+            random.seed()
+            #cucaracha.set_edad(random.randrange(45, 330, 1),
+            #    random.randrange(1, 24, 1))
+            self.cucas.add(cucaracha)
+
+        for x in range (2):
+            cucaracha = Cucaracha("hembra", RESOLUCION_INICIAL[0],
+                RESOLUCION_INICIAL[1])
+            random.seed()
+            #cucaracha.set_edad(random.randrange(45, 330, 1),
+            #    random.randrange(1, 24, 1))
+            self.cucas.add(cucaracha)
