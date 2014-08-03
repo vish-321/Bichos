@@ -95,7 +95,7 @@ class Bichos(gtk.Window):
 
     def __run_games(self, intro, game):
         if self.juego:
-            self.juego.stop()
+            self.juego.salir()
             del(self.juego)
             self.juego = False
             self.queue_draw()

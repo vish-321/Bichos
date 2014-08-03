@@ -92,9 +92,6 @@ class Intro(gobject.GObject):
         except:
             pass
 
-    def stop(self):
-        self.salir()
-
     def salir(self, widget=False):
         self.estado = 0
         pygame.quit()

@@ -7,7 +7,7 @@ import pygame
 import gtk
 
 from pygame.locals import HWSURFACE
-#from BiblioJAM.JAMButton import JAMButton
+from Cucaracha import Cucaracha
 
 #from Bicho import Bicho
 
@@ -36,7 +36,7 @@ class CucaraSims(gobject.GObject):
         self.reloj = False
         self.estado = 0
 
-        #self.sprites = pygame.sprite.RenderUpdates()
+        self.cucas = pygame.sprite.RenderUpdates()
         #self.widgets = pygame.sprite.RenderUpdates()
 
     def __handle_event(self):
@@ -60,16 +60,16 @@ class CucaraSims(gobject.GObject):
                 self.reloj.tick(35)
                 while gtk.events_pending():
                     gtk.main_iteration()
-                #if len(self.sprites.sprites()) < 5:
-                #    gobject.idle_add(self.sprites.add,
+                #if len(self.cucas.cucas()) < 5:
+                #    gobject.idle_add(self.cucas.add,
                 #        Bicho(RESOLUCION_INICIAL[0],
                 #        RESOLUCION_INICIAL[1]))
-                #self.sprites.clear(self.ventana, self.escenario)
+                self.cucas.clear(self.ventana, self.escenario)
                 #self.widgets.clear(self.ventana, self.escenario)
-                #self.sprites.update()
+                self.cucas.update()
                 #self.widgets.update()
                 self.__handle_event()
-                #self.sprites.draw(self.ventana)
+                self.cucas.draw(self.ventana)
                 #self.widgets.draw(self.ventana)
                 self.ventana_real.blit(pygame.transform.scale(
                     self.ventana, self.resolucionreal), (0, 0))
@@ -77,10 +77,6 @@ class CucaraSims(gobject.GObject):
                 pygame.time.wait(3)
         except:
             pass
-
-    def stop(self):
-        self.estado = 0
-        pygame.quit()
 
     def salir(self, widget=False):
         self.estado = 0
@@ -129,3 +125,12 @@ class CucaraSims(gobject.GObject):
         self.ventana = pygame.Surface((RESOLUCION_INICIAL[0],
             RESOLUCION_INICIAL[1]), flags=HWSURFACE)
         self.ventana_real = pygame.display.get_surface()
+
+        self.cucas.add(Cucaracha("macho", RESOLUCION_INICIAL[0],
+            RESOLUCION_INICIAL[1]))
+        self.cucas.add(Cucaracha("macho", RESOLUCION_INICIAL[0],
+            RESOLUCION_INICIAL[1]))
+        self.cucas.add(Cucaracha("hembra", RESOLUCION_INICIAL[0],
+            RESOLUCION_INICIAL[1]))
+        self.cucas.add(Cucaracha("hembra", RESOLUCION_INICIAL[0],
+            RESOLUCION_INICIAL[1]))
