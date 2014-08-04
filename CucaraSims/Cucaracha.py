@@ -5,6 +5,7 @@
 #   Flavio Danesse <fdanesse@gmail.com>
 
 import os
+import gobject
 import pygame
 from pygame.sprite import Sprite
 import random
@@ -19,11 +20,23 @@ BASE_PATH = os.path.dirname(__file__)
 INDICE_ROTACION = 5
 
 
-class Cucaracha(Sprite):
+class Cucaracha(Sprite, gobject.GObject):
+
+    __gsignals__ = {
+    "new-edad": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
+    "muere": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,
+        gobject.TYPE_PYOBJECT)),
+    "muda": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, []),
+    "reproduce": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
 
     def __init__(self, sexo, ancho, alto):
 
         Sprite.__init__(self)
+        gobject.GObject.__init__(self)
 
         self.sexo = sexo
 
@@ -38,7 +51,8 @@ class Cucaracha(Sprite):
             path = os.path.join(BASE_PATH, "Imagenes", self.imagen)
             self.imagen = pygame.image.load(path)
 
-        imagen_escalada = pygame.transform.scale(self.imagen, (60, 50))
+        self.escala = (60, 50)
+        imagen_escalada = pygame.transform.scale(self.imagen, self.escala)
         self.imagen_original = imagen_escalada.convert_alpha()
 
         self.dx = 0
@@ -56,11 +70,13 @@ class Cucaracha(Sprite):
         random.seed()
         self.muerte = random.randrange(340, 365, 1)  # morirá este dia
         self.mudas = {
-            9: (73, 60),
-            21: (83, 70),
-            32: (93, 80),
-            43: (103, 90)}
-        #self.repro = [51, 62, 73]
+            10: (53, 40),
+            30: (63, 50),
+            50: (73, 60),
+            90: (83, 70),
+            130: (93, 80),
+            180: (103, 90)}
+        self.repro = range(190, 330, 30)
 
         self.timer = Timer(1)
         self.edad = {
@@ -71,9 +87,13 @@ class Cucaracha(Sprite):
 
     def __update_time(self, widget, _dict):
         self.edad = dict(_dict)
-        print self.edad["Dias"], self.edad["Horas"]
+        self.emit("new-edad", self.edad)
         if self.edad["Dias"] in self.mudas.keys() and self.edad["Horas"] == 0:
             self.__set_muda(escala=self.mudas[self.edad["Dias"]])
+        elif self.edad["Dias"] in self.repro and self.edad["Horas"] == 0:
+            self.emit("reproduce", (self.rect.centerx, self.rect.centery))
+        elif self.edad["Dias"] >= self.muerte:
+            self.morir()
 
     def __actualizar_posicion(self):
         x = self.rect.centerx + self.dx
@@ -97,8 +117,11 @@ class Cucaracha(Sprite):
         return x, y
 
     def __set_muda(self, escala=(63, 50)):
-        print "muda", escala
-        self.imagen_original = pygame.transform.scale(self.imagen, escala)
+        """
+        Muda de exoesqueleto, cambia de tamaño.
+        """
+        self.escala = escala
+        self.imagen_original = pygame.transform.scale(self.imagen, self.escala)
         self.image = pygame.transform.rotate(
             self.imagen_original, -self.angulo)
         x = self.rect.centerx
@@ -106,7 +129,7 @@ class Cucaracha(Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.centery = y
-        #self.emit("muda", (x, y), escala)
+        self.emit("muda")
 
     def update(self):
         acciones = ["camina", "gira", "quieto"]
@@ -126,22 +149,33 @@ class Cucaracha(Sprite):
             self.__actualizar_posicion()
 
     def set_edad(self, dias, horas):
+        """
+        Para Forzar edad.
+        """
         self.timer.dias = dias
         self.timer.horas = horas
-        mudas = self.mudas.keys()
-        escala = (60, 50)
+        m = self.mudas.keys()
+        mudas = []
+        for x in m:
+            mudas.append(int(x))
+        mudas.sort()
         if self.timer.dias in range(0, mudas[0]):
-            escala = (60, 50)
+            self.escala = (60, 50)
         elif self.timer.dias in range(mudas[0], mudas[1] + 1):
-            escala = self.mudas[mudas[0]]
+            self.escala = self.mudas[mudas[0]]
         elif self.timer.dias in range(mudas[1], mudas[2] + 1):
-            escala = self.mudas[mudas[1]]
+            self.escala = self.mudas[mudas[1]]
         elif self.timer.dias in range(mudas[2], mudas[3] + 1):
-            escala = self.mudas[mudas[2]]
+            self.escala = self.mudas[mudas[2]]
+        elif self.timer.dias in range(mudas[3], mudas[4] + 1):
+            self.escala = self.mudas[mudas[3]]
+        elif self.timer.dias in range(mudas[4], mudas[5] + 1):
+            self.escala = self.mudas[mudas[4]]
         else:
-            escala = self.mudas[mudas[3]]
-        self.__set_muda(escala=escala)
+            self.escala = self.mudas[mudas[5]]
+        self.__set_muda(escala=self.escala)
 
     def morir(self):
         self.timer.salir()
+        self.emit("muere", (self.rect.centerx, self.rect.centery), self.escala)
         self.kill()
