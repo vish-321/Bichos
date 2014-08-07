@@ -89,6 +89,7 @@ class Bichos(gtk.Window):
         os.putenv('SDL_WINDOWID', str(xid))
         self.juego = CucaraSims()
         self.juego.connect("exit", self.__run_games, "menu")
+        self.juego.connect("lectura", self.widgetjuego.run_lectura)
         self.juego.config()
         self.juego.run()
         return False
@@ -113,21 +114,22 @@ class Bichos(gtk.Window):
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
         if valor == 1:
-            # Introduccion, opciones de juego.
             self.widgetjuego = Escenario()
             self.widgetjuego.connect("new-size", self.__redraw)
             self.add(self.widgetjuego)
             gobject.idle_add(self.__run_intro, self.widgetjuego)
+
         elif valor == 2:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
             self.widgetjuego = CucaraSimsWidget()
             escenario = Escenario()
-            #escenario.modify_bg(
-            #    gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+            escenario.modify_bg(
+                gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
             escenario.connect("new-size", self.__redraw)
-            self.widgetjuego.pack1(escenario, resize=False, shrink=False)
+            self.widgetjuego.pack1(escenario, resize=True, shrink=True)
             self.add(self.widgetjuego)
             gobject.idle_add(self.__run_cucarasims, escenario)
+
         elif valor == 3:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
             self.widgetjuego = CantaBichos()

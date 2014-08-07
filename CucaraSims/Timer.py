@@ -29,14 +29,7 @@ class Timer(gobject.GObject):
         self.horas = 0
         self.segundos = 0
 
-        self.__new_handle(True)
-
-    def __new_handle(self, reset):
-        if self.actualizador:
-            gobject.source_remove(self.actualizador)
-            self.actualizador = False
-        if reset:
-            self.actualizador = gobject.timeout_add(1000, self.__handle)
+        self.new_handle(True)
 
     def __handle(self):
         self.segundos = int(time.time()) - self.init
@@ -55,5 +48,12 @@ class Timer(gobject.GObject):
             "Horas": self.horas})
         return True
 
+    def new_handle(self, reset):
+        if self.actualizador:
+            gobject.source_remove(self.actualizador)
+            self.actualizador = False
+        if reset:
+            self.actualizador = gobject.timeout_add(1000, self.__handle)
+
     def salir(self):
-        self.__new_handle(False)
+        self.new_handle(False)

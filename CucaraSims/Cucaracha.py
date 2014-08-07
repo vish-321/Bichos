@@ -23,8 +23,8 @@ INDICE_ROTACION = 5
 class Cucaracha(Sprite, gobject.GObject):
 
     __gsignals__ = {
-    "new-edad": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
+    #"new-edad": (gobject.SIGNAL_RUN_LAST,
+    #    gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
     "muere": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,
         gobject.TYPE_PYOBJECT)),
@@ -33,7 +33,7 @@ class Cucaracha(Sprite, gobject.GObject):
     "reproduce": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
 
-    def __init__(self, sexo, ancho, alto):
+    def __init__(self, sexo, ancho, alto, TIME):
 
         Sprite.__init__(self)
         gobject.GObject.__init__(self)
@@ -51,7 +51,7 @@ class Cucaracha(Sprite, gobject.GObject):
             path = os.path.join(BASE_PATH, "Imagenes", self.imagen)
             self.imagen = pygame.image.load(path)
 
-        self.escala = (60, 50)
+        self.escala = (53, 40)
         imagen_escalada = pygame.transform.scale(self.imagen, self.escala)
         self.imagen_original = imagen_escalada.convert_alpha()
 
@@ -78,7 +78,7 @@ class Cucaracha(Sprite, gobject.GObject):
             180: (103, 90)}
         self.repro = range(190, 330, 30)
 
-        self.timer = Timer(1)
+        self.timer = Timer(TIME)
         self.edad = {
             "Años": 0,
             "Dias": 0,
@@ -87,12 +87,17 @@ class Cucaracha(Sprite, gobject.GObject):
 
     def __update_time(self, widget, _dict):
         self.edad = dict(_dict)
-        self.emit("new-edad", self.edad)
+        #self.emit("new-edad", self.edad)
         if self.edad["Dias"] in self.mudas.keys() and self.edad["Horas"] == 0:
             self.__set_muda(escala=self.mudas[self.edad["Dias"]])
+            self.emit("muda")
         elif self.edad["Dias"] in self.repro and self.edad["Horas"] == 0:
-            self.emit("reproduce", (self.rect.centerx, self.rect.centery))
+            self.emit("reproduce", (self.angulo,
+                self.rect.centerx, self.rect.centery))
+            #Fixme: Si es hembra y hay machos en el escenario
         elif self.edad["Dias"] >= self.muerte:
+            self.emit("muere", (self.angulo,
+                self.rect.centerx, self.rect.centery), self.escala)
             self.morir()
 
     def __actualizar_posicion(self):
@@ -129,7 +134,6 @@ class Cucaracha(Sprite, gobject.GObject):
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.centery = y
-        self.emit("muda")
 
     def update(self):
         acciones = ["camina", "gira", "quieto"]
@@ -178,4 +182,38 @@ class Cucaracha(Sprite, gobject.GObject):
     def morir(self):
         self.timer.salir()
         self.emit("muere", (self.rect.centerx, self.rect.centery), self.escala)
+        self.kill()
+
+
+class Muerta(Sprite):
+
+    def __init__(self, pos, escala, TIME):
+
+        Sprite.__init__(self)
+
+        path = os.path.join(BASE_PATH, "Imagenes", "muerta.png")
+        imagen = pygame.image.load(path)
+        imagen_escalada = pygame.transform.scale(imagen, escala)
+        self.image = imagen_escalada.convert_alpha()
+        self.rect = self.image.get_rect()
+
+        self.image = pygame.transform.rotate(
+            self.imagen_original, -pos[0])
+        self.rect.centerx = pos[1]
+        self.rect.centery = pos[2]
+
+        self.timer = Timer(TIME)
+        self.edad = {
+            "Años": 0,
+            "Dias": 0,
+            "Horas": 0}
+        self.timer.connect("new-time", self.__update_time)
+
+    def __update_time(self, widget, _dict):
+        self.edad = dict(_dict)
+        if self.edad["Dias"] >= 3:
+            self.morir()
+
+    def morir(self):
+        self.timer.salir()
         self.kill()

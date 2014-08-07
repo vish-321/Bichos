@@ -23,6 +23,8 @@ import os
 import gtk
 import gobject
 
+from Widgets import Widget_Leccion
+
 
 class CucaraSimsWidget(gtk.HPaned):
 
@@ -32,7 +34,42 @@ class CucaraSimsWidget(gtk.HPaned):
 
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
+        self.lecciones = []
+
+        self.pack2(Derecha(), resize=False, shrink=False)
         self.show_all()
+
+    def run_lectura(self, juego, lectura):
+        if not lectura in self.lecciones:
+            self.lecciones.append(lectura)
+            self.get_toplevel().juego.pause()
+            dialog = Widget_Leccion(parent=self.get_toplevel())
+            dialog.run()
+            dialog.destroy()
+            self.get_toplevel().juego.unpause()
+        print lectura
 
     def salir(self):
         pass
+
+
+class Derecha(gtk.EventBox):
+
+    def __init__(self):
+
+        gtk.EventBox.__init__(self)
+
+        box = gtk.VBox()
+
+        box.pack_start(gtk.Button("Ciclo"), False, False, 0)
+        box.pack_start(gtk.Button("Muda"), False, False, 0)
+        box.pack_start(gtk.Button("Reproducción"), False, False, 0)
+        box.pack_start(gtk.Button("Plaga"), False, False, 0)
+        box.pack_start(gtk.Button("Muerte"), False, False, 0)
+        box.pack_start(gtk.Button("General"), False, False, 0)
+        box.pack_end(gtk.Button("Salir"), False, False, 0)
+
+        self.add(box)
+        self.show_all()
+
+        self.set_size_request(100, -1)
