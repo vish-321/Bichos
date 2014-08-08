@@ -26,21 +26,20 @@ import gobject
 
 class Widget_Leccion(gtk.Dialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, lectura=""):
 
         gtk.Dialog.__init__(self, parent=parent,
             buttons=("Cerrar", gtk.RESPONSE_ACCEPT))
 
-        #self.set_decorated(False)
+        self.set_decorated(False)
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
         self.set_border_width(15)
 
-        #imagen = gtk.Image()
-        #imagen.set_from_file(os.path.join(BASE_PATH,
-        #    "Iconos", "JAMediaCredits.svg"))
-
         self.vbox.pack_start(Panel(), True, True, 0)
         self.vbox.show_all()
+
+        rect = parent.get_allocation()
+        self.set_size_request(rect.width, rect.height)
 
 
 class Panel(gtk.HPaned):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#   Cucaracha.py por:
+#   Huevos.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
 
 import os

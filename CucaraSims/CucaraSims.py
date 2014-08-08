@@ -25,51 +25,123 @@ import gobject
 
 from Widgets import Widget_Leccion
 
+BASE_PATH = os.path.dirname(__file__)
+
 
 class CucaraSimsWidget(gtk.HPaned):
+
+    #__gsignals__ = {
+    #"exit": (gobject.SIGNAL_RUN_LAST,
+    #    gobject.TYPE_NONE, [])}
 
     def __init__(self):
 
         gtk.HPaned.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
 
         self.lecciones = []
 
-        self.pack2(Derecha(), resize=False, shrink=False)
+        derecha = Derecha()
+        self.pack2(derecha, resize=False, shrink=False)
+
+        derecha.connect("lectura", self.__run_lectura)
+
         self.show_all()
+
+    def __run_lectura(self, derecha, lectura):
+        if lectura == "Salir":
+            #self.emit("exit")
+            #FIXME: Dialogo para confirmar salir
+            return
+
+        self.get_toplevel().juego.pause()
+        dialog = Widget_Leccion(
+            parent=self.get_toplevel(), lectura=lectura)
+        dialog.run()
+        dialog.destroy()
+        self.get_toplevel().juego.unpause()
 
     def run_lectura(self, juego, lectura):
         if not lectura in self.lecciones:
             self.lecciones.append(lectura)
             self.get_toplevel().juego.pause()
-            dialog = Widget_Leccion(parent=self.get_toplevel())
+            dialog = Widget_Leccion(
+                parent=self.get_toplevel(), lectura=lectura)
             dialog.run()
             dialog.destroy()
             self.get_toplevel().juego.unpause()
-        print lectura
 
     def salir(self):
-        pass
+        print self.salir
 
 
 class Derecha(gtk.EventBox):
+
+    __gsignals__ = {
+    "lectura": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self):
 
         gtk.EventBox.__init__(self)
 
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        self.set_border_width(4)
+
         box = gtk.VBox()
 
-        box.pack_start(gtk.Button("Ciclo"), False, False, 0)
-        box.pack_start(gtk.Button("Muda"), False, False, 0)
-        box.pack_start(gtk.Button("Reproducción"), False, False, 0)
-        box.pack_start(gtk.Button("Plaga"), False, False, 0)
-        box.pack_start(gtk.Button("Muerte"), False, False, 0)
-        box.pack_start(gtk.Button("General"), False, False, 0)
-        box.pack_end(gtk.Button("Salir"), False, False, 0)
+        l = ["Ciclo Vital", "Muda de Exoesqueleto", "Reproducción",
+            "Plaga", "Muerte", "Lectura General"]
+
+        for leccion in l:
+            button = gtk.Button(leccion)
+            box.pack_start(button, False, False, 5)
+            button.connect("clicked", self.__emit_lectura)
+
+        button = ButtonImagen("agua")
+        box.pack_start(button, False, False, 5)
+
+        button = ButtonImagen("alimento")
+        box.pack_start(button, False, False, 5)
+
+        button = gtk.Button("Salir")
+        box.pack_end(button, False, False, 5)
+        button.connect("clicked", self.__emit_lectura)
 
         self.add(box)
         self.show_all()
 
-        self.set_size_request(100, -1)
+        self.set_size_request(120, -1)
+
+    def __emit_lectura(self, button):
+        self.emit("lectura", button.get_label())
+
+
+class ButtonImagen(gtk.EventBox):
+
+    def __init__(self, tipo):
+
+        gtk.EventBox.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        self.set_border_width(4)
+
+        self.tipo = tipo
+
+        archivo = "jarra.png"
+        if self.tipo == "agua":
+            archivo = "jarra.png"
+        elif self.tipo == "alimento":
+            archivo = "pan.png"
+
+        imagen = gtk.Image()
+        path = os.path.join(BASE_PATH, "Imagenes", archivo)
+        imagen.set_from_file(path)
+
+        self.add(imagen)
+        self.show_all()
+        self.connect("button-press-event", self.__clicked_image)
+
+    def __clicked_image(self, imagen, event):
+        print imagen

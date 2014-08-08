@@ -197,8 +197,7 @@ class Muerta(Sprite):
         self.image = imagen_escalada.convert_alpha()
         self.rect = self.image.get_rect()
 
-        self.image = pygame.transform.rotate(
-            self.imagen_original, -pos[0])
+        self.image = pygame.transform.rotate(self.image, -pos[0])
         self.rect.centerx = pos[1]
         self.rect.centery = pos[2]
 

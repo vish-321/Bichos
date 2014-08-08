@@ -47,6 +47,8 @@ class CucaraSims(gobject.GObject):
             "Dias": 0,
             "Horas": 0}
 
+        self.musica = False
+
         self.cucas = pygame.sprite.RenderUpdates()
         self.huevos = pygame.sprite.RenderUpdates()
         self.muertas = pygame.sprite.RenderUpdates()
@@ -62,9 +64,18 @@ class CucaraSims(gobject.GObject):
 
     def __stop_timer(self, objeto):
         #objeto.disconnect_by_func(self.__update_edad)
-        objeto.disconnect_by_func(self.__event_muerte)
-        objeto.disconnect_by_func(self.__event_muda)
-        objeto.disconnect_by_func(self.__event_repro)
+        try:
+            objeto.disconnect_by_func(self.__event_muerte)
+        except:
+            pass
+        try:
+            objeto.disconnect_by_func(self.__event_muda)
+        except:
+            pass
+        try:
+            objeto.disconnect_by_func(self.__event_repro)
+        except:
+            pass
         objeto.morir()
 
     def __connect_signals(self, objeto):
@@ -254,3 +265,7 @@ class CucaraSims(gobject.GObject):
             self.cucas.add(cucaracha)
 
         map(self.__connect_signals, self.cucas.sprites())
+
+        #path = os.path.join(BASE_PATH, "CucaraSims", "Sonidos", "musica.ogg")
+        #pygame.mixer.music.load(path)
+        #pygame.mixer.music.play(-1, 0.0)
