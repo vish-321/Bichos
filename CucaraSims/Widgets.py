@@ -41,6 +41,12 @@ class Widget_Leccion(gtk.Dialog):
         rect = parent.get_allocation()
         self.set_size_request(rect.width, rect.height)
 
+        parent.connect("check-resize", self.__resize)
+
+    def __resize(self, parent):
+        rect =  parent.get_allocation()
+        self.set_size_request(rect.width, rect.height)
+
 
 class Panel(gtk.HPaned):
 
