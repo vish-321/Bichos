@@ -45,9 +45,43 @@ class CucaraSimsWidget(gtk.HPaned):
         derecha = Derecha()
         self.pack2(derecha, resize=False, shrink=False)
 
+        derecha.connect("select", self.__set_cursor)
         derecha.connect("lectura", self.__run_lectura)
 
         self.show_all()
+
+        self.agua_cursor = False
+        self.alimento_cursor = False
+        self.cursor_root = False
+        gobject.idle_add(self.__config_cursors)
+
+    def __config_cursors(self):
+        icono = os.path.join(BASE_PATH, "Imagenes", "jarra.png")
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono, -1, 24)
+        self.agua_cursor = gtk.gdk.Cursor(
+            gtk.gdk.display_get_default(), pixbuf, 0, 0)
+
+        icono = os.path.join(BASE_PATH, "Imagenes", "pan.png")
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono, -1, 24)
+        self.alimento_cursor = gtk.gdk.Cursor(
+            gtk.gdk.display_get_default(), pixbuf, 0, 0)
+
+        self.cursor_root = self.get_toplevel().get_property(
+            "window").get_cursor()
+        return False
+
+    def __set_cursor(self, widget, tipo):
+        win = self.get_toplevel().get_property("window")
+        if tipo == "agua":
+            if win.get_cursor() == self.agua_cursor:
+                win.set_cursor(self.cursor_root)
+            else:
+                win.set_cursor(self.agua_cursor)
+        elif tipo == "alimento":
+            if win.get_cursor() == self.alimento_cursor:
+                win.set_cursor(self.cursor_root)
+            else:
+                win.set_cursor(self.alimento_cursor)
 
     def __run_lectura(self, derecha, lectura):
         if lectura == "Salir":
@@ -80,6 +114,8 @@ class Derecha(gtk.EventBox):
 
     __gsignals__ = {
     "lectura": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
+    "select": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self):
@@ -100,9 +136,11 @@ class Derecha(gtk.EventBox):
             button.connect("clicked", self.__emit_lectura)
 
         button = ButtonImagen("agua")
+        button.connect("select", self.__select_imagen)
         box.pack_start(button, False, False, 5)
 
         button = ButtonImagen("alimento")
+        button.connect("select", self.__select_imagen)
         box.pack_start(button, False, False, 5)
 
         button = gtk.Button("Salir")
@@ -114,11 +152,18 @@ class Derecha(gtk.EventBox):
 
         self.set_size_request(120, -1)
 
+    def __select_imagen(self, widget, tipo):
+        self.emit("select", tipo)
+
     def __emit_lectura(self, button):
         self.emit("lectura", button.get_label())
 
 
 class ButtonImagen(gtk.EventBox):
+
+    __gsignals__ = {
+    "select": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self, tipo):
 
@@ -144,4 +189,4 @@ class ButtonImagen(gtk.EventBox):
         self.connect("button-press-event", self.__clicked_image)
 
     def __clicked_image(self, imagen, event):
-        print imagen
+        self.emit("select", self.tipo)
