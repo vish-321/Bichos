@@ -12,6 +12,7 @@ from Cucaracha import Cucaracha
 from Cucaracha import Muerta
 from Huevos import Huevo
 from Timer import Timer
+from Cursor import Cursor
 
 RESOLUCION_INICIAL = (800, 600)
 TIME = 1
@@ -52,7 +53,10 @@ class CucaraSims(gobject.GObject):
         self.cucas = pygame.sprite.RenderUpdates()
         self.huevos = pygame.sprite.RenderUpdates()
         self.muertas = pygame.sprite.RenderUpdates()
-        #self.widgets = pygame.sprite.RenderUpdates()
+        self.mouse = pygame.sprite.RenderUpdates()
+
+        self.cursor_agua = False
+        self.cursor_pan = False
 
     def __handle_event(self):
         for event in pygame.event.get():
@@ -60,6 +64,13 @@ class CucaraSims(gobject.GObject):
                 if event.key == pygame.K_ESCAPE:
                     self.emit("exit")
                     return
+            elif event.type == pygame.MOUSEMOTION:
+                cursor = self.mouse.sprites()
+                if cursor:
+                    cursor[0].pos(event.pos)
+                    print event
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                print event
         pygame.event.clear()
 
     def __stop_timer(self, objeto):
@@ -141,6 +152,19 @@ class CucaraSims(gobject.GObject):
     def __des_pausar(self, objeto):
         objeto.timer.new_handle(True)
 
+    def set_cursor(self, widget, tipo):
+        self.mouse.empty()
+        if tipo:
+            pygame.mouse.set_visible(False)
+            if tipo == "agua":
+                self.cursor_agua.pos((-100, -100))
+                self.mouse.add(self.cursor_agua)
+            elif tipo == "alimento":
+                self.cursor_pan.pos((-100, -100))
+                self.mouse.add(self.cursor_pan)
+        else:
+            pygame.mouse.set_visible(True)
+
     def pause(self):
         map(self.__pausar, self.cucas.sprites())
         map(self.__pausar, self.huevos.sprites())
@@ -173,16 +197,16 @@ class CucaraSims(gobject.GObject):
                 self.huevos.clear(self.ventana, self.escenario)
                 self.muertas.clear(self.ventana, self.escenario)
                 self.cucas.clear(self.ventana, self.escenario)
-                #self.widgets.clear(self.ventana, self.escenario)
+                self.mouse.clear(self.ventana, self.escenario)
                 #self.huevos.update()
                 #self.muertas.update()
                 self.cucas.update()
-                #self.widgets.update()
+                self.mouse.update()
                 self.__handle_event()
                 self.huevos.draw(self.ventana)
                 self.muertas.draw(self.ventana)
                 self.cucas.draw(self.ventana)
-                #self.widgets.draw(self.ventana)
+                self.mouse.draw(self.ventana)
                 self.ventana_real.blit(pygame.transform.scale(
                     self.ventana, self.resolucionreal), (0, 0))
                 pygame.display.update()
@@ -269,3 +293,6 @@ class CucaraSims(gobject.GObject):
         #path = os.path.join(BASE_PATH, "CucaraSims", "Sonidos", "musica.ogg")
         #pygame.mixer.music.load(path)
         #pygame.mixer.music.play(-1, 0.0)
+
+        self.cursor_agua = Cursor("agua")
+        self.cursor_pan = Cursor("alimento")

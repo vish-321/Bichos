@@ -88,6 +88,7 @@ class Bichos(gtk.Window):
         xid = escenario.get_property('window').xid
         os.putenv('SDL_WINDOWID', str(xid))
         self.juego = CucaraSims()
+        self.widgetjuego.connect("set-cursor", self.juego.set_cursor)
         self.juego.connect("exit", self.__run_games, "menu")
         self.juego.connect("lectura", self.widgetjuego.run_lectura)
         self.juego.config()

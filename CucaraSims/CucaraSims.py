@@ -30,9 +30,11 @@ BASE_PATH = os.path.dirname(__file__)
 
 class CucaraSimsWidget(gtk.HPaned):
 
-    #__gsignals__ = {
-    #"exit": (gobject.SIGNAL_RUN_LAST,
-    #    gobject.TYPE_NONE, [])}
+    __gsignals__ = {
+    "exit": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, []),
+    "set-cursor": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
 
     def __init__(self):
 
@@ -53,6 +55,8 @@ class CucaraSimsWidget(gtk.HPaned):
         self.agua_cursor = False
         self.alimento_cursor = False
         self.cursor_root = False
+        self.cursor_tipo = False
+
         gobject.idle_add(self.__config_cursors)
 
     def __config_cursors(self):
@@ -73,15 +77,20 @@ class CucaraSimsWidget(gtk.HPaned):
     def __set_cursor(self, widget, tipo):
         win = self.get_toplevel().get_property("window")
         if tipo == "agua":
-            if win.get_cursor() == self.agua_cursor:
+            if self.cursor_tipo == "agua":
                 win.set_cursor(self.cursor_root)
+                self.cursor_tipo = False
             else:
                 win.set_cursor(self.agua_cursor)
+                self.cursor_tipo = "agua"
         elif tipo == "alimento":
-            if win.get_cursor() == self.alimento_cursor:
+            if self.cursor_tipo == "alimento":
                 win.set_cursor(self.cursor_root)
+                self.cursor_tipo = False
             else:
                 win.set_cursor(self.alimento_cursor)
+                self.cursor_tipo = "alimento"
+        self.emit("set-cursor", self.cursor_tipo)
 
     def __run_lectura(self, derecha, lectura):
         if lectura == "Salir":
@@ -116,7 +125,7 @@ class Derecha(gtk.EventBox):
     "lectura": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
     "select": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
 
     def __init__(self):
 
