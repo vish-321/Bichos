@@ -13,7 +13,9 @@ class Escenario(gtk.DrawingArea):
 
     __gsignals__ = {
     "new-size": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
+    "mouse-enter": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN, ))}
 
     def __init__(self):
 
@@ -26,7 +28,8 @@ class Escenario(gtk.DrawingArea):
             #gtk.gdk.KEY_RELEASE_MASK | gtk.gdk.KEY_PRESS_MASK |
             gtk.gdk.POINTER_MOTION_MASK | gtk.gdk.POINTER_MOTION_HINT_MASK |
             gtk.gdk.BUTTON_MOTION_MASK | gtk.gdk.BUTTON_PRESS_MASK |
-            gtk.gdk.BUTTON_RELEASE_MASK)
+            gtk.gdk.BUTTON_RELEASE_MASK | gtk.gdk.LEAVE_NOTIFY_MASK
+            | gtk.gdk.ENTER_NOTIFY_MASK)
 
         self.connect("size-allocate", self.__size_request)
         self.connect("expose-event", self.__redraw)
@@ -34,8 +37,16 @@ class Escenario(gtk.DrawingArea):
         self.connect("button_press_event", self.__button_press_event)
         self.connect("button_release_event", self.__button_release_event)
         self.connect("motion-notify-event", self.__mouse_motion)
+        self.connect("enter-notify-event", self.__mouse_enter)
+        self.connect("leave-notify-event", self.__mouse_leave)
 
         self.show_all()
+
+    def __mouse_enter(self, widget, event):
+        self.emit("mouse-enter", True)
+
+    def __mouse_leave(self, widget, event):
+        self.emit("mouse-enter", False)
 
     def __button_press_event(self, widget, event):
         if self.get_toplevel().juego:

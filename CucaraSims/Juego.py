@@ -68,8 +68,9 @@ class CucaraSims(gobject.GObject):
                 cursor = self.mouse.sprites()
                 if cursor:
                     cursor[0].pos(event.pos)
-                    print event
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                # FIXME: dejar alimento o agua en el escenario
+                # resetear cursor en pygame y gtk
                 print event
         pygame.event.clear()
 
@@ -153,7 +154,13 @@ class CucaraSims(gobject.GObject):
         objeto.timer.new_handle(True)
 
     def set_cursor(self, widget, tipo):
+        """
+        Cuando el usuario selecciona alimento o agua en la interfaz gtk,
+        se setea el cursor tambien en pygame, esto tambien sucede cuando el
+        mouse entra o sale del drawing donde dibuja pygame.
+        """
         self.mouse.empty()
+        #FIXME: quitar alimento o agua del escenario
         if tipo:
             pygame.mouse.set_visible(False)
             if tipo == "agua":

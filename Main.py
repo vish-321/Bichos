@@ -95,6 +95,16 @@ class Bichos(gtk.Window):
         self.juego.run()
         return False
 
+    def __mouse_enter(self, widget, valor):
+        """
+        Cuando el mouse entra o sale del drawing donde dibuja pygame, setea
+        el cursor para que no siga en pantalla en pygame si el mouse está fuera
+        """
+        if self.juego and not valor:
+            self.juego.set_cursor(False, False)
+        elif self.juego and valor:
+            self.juego.set_cursor(False, self.widgetjuego.cursor_tipo)
+
     def __run_games(self, intro, game):
         if self.juego:
             self.juego.salir()
@@ -127,6 +137,7 @@ class Bichos(gtk.Window):
             escenario.modify_bg(
                 gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
             escenario.connect("new-size", self.__redraw)
+            escenario.connect("mouse-enter", self.__mouse_enter)
             self.widgetjuego.pack1(escenario, resize=True, shrink=True)
             self.add(self.widgetjuego)
             gobject.idle_add(self.__run_cucarasims, escenario)

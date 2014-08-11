@@ -75,6 +75,10 @@ class CucaraSimsWidget(gtk.HPaned):
         return False
 
     def __set_cursor(self, widget, tipo):
+        """
+        Cuando el usuario selecciona alimento o agua en la interfaz gtk,
+        setea el cursor y manda una señal para hacerlo tambien en pygame.
+        """
         win = self.get_toplevel().get_property("window")
         if tipo == "agua":
             if self.cursor_tipo == "agua":
