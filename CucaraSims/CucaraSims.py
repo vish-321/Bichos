@@ -100,9 +100,11 @@ class CucaraSimsWidget(gtk.HPaned):
         self.emit("set-cursor", self.cursor_tipo)
 
     def __run_lectura(self, derecha, lectura):
+        """
+        La Interfaz gtk manda abrir una lectura.
+        """
         if lectura == "Salir":
-            #self.emit("exit")
-            #FIXME: Dialogo para confirmar salir
+            self.emit("exit")
             return
         self.get_toplevel().juego.pause()
         dialog = Widget_Leccion(
@@ -112,6 +114,9 @@ class CucaraSimsWidget(gtk.HPaned):
         self.get_toplevel().juego.unpause()
 
     def run_lectura(self, juego, lectura):
+        """
+        El Juego pygame manda abrir una lectura.
+        """
         if not lectura in self.lecciones:
             self.lecciones.append(lectura)
             self.get_toplevel().juego.pause()

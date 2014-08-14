@@ -39,6 +39,8 @@ class Cucaracha(Sprite, gobject.GObject):
         gobject.GObject.__init__(self)
 
         self.sexo = sexo
+        self.hambre = 0
+        self.sed = 0
 
         random.seed()
         path = ""

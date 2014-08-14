@@ -48,6 +48,7 @@ class Bichos(gtk.Window):
             KeyPressTraduce(event)
         else:
             if gtk.gdk.keyval_name(event.keyval) == "Escape":
+                # FIXME: Escape en juego gtk (CantaBichos).
                 self.widgetjuego.salir()
                 self.switch(False, 1)
         return False
@@ -89,12 +90,30 @@ class Bichos(gtk.Window):
         os.putenv('SDL_WINDOWID', str(xid))
         self.juego = CucaraSims()
         self.widgetjuego.connect("set-cursor", self.juego.set_cursor)
-        self.juego.connect("exit", self.__run_games, "menu")
+        self.widgetjuego.connect("exit", self.__dialog_exit_game, "CucaraSims")
+        self.juego.connect("exit", self.__dialog_exit_game, "CucaraSims")
         self.juego.connect("lectura", self.widgetjuego.run_lectura)
         self.juego.connect("clear-cursor-gtk", self.widgetjuego.clear_cursor)
         self.juego.config()
         self.juego.run()
         return False
+
+    def __dialog_exit_game(self, widget, juego_name):
+        self.juego.pause()
+        dialog = gtk.Dialog(parent=self,
+            buttons=("Salir", gtk.RESPONSE_ACCEPT,
+            "Cancelar", gtk.RESPONSE_CANCEL))
+        dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        label = gtk.Label("Salir de %s" % juego_name)
+        label.show()
+        dialog.set_border_width(10)
+        dialog.vbox.pack_start(label, True, True, 0)
+        resp = dialog.run()
+        dialog.destroy()
+        if resp == gtk.RESPONSE_ACCEPT:
+            self.__run_games(False, "menu")
+            return
+        self.juego.unpause()
 
     def __mouse_enter(self, widget, valor):
         """

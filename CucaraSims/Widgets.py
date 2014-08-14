@@ -95,6 +95,7 @@ class Alimento(Sprite):
         Sprite.__init__(self)
 
         self.tipo = tipo
+        self.cantidad = 150
 
         path = ""
         if self.tipo == "agua":

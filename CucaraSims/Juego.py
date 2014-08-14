@@ -56,7 +56,7 @@ class CucaraSims(gobject.GObject):
         self.cucas = pygame.sprite.RenderUpdates()
         self.huevos = pygame.sprite.RenderUpdates()
         self.muertas = pygame.sprite.RenderUpdates()
-        self.mouse = pygame.sprite.RenderUpdates()
+        self.mouse = pygame.sprite.GroupSingle()
         self.alimentos = pygame.sprite.RenderUpdates()
 
         self.cursor_agua = False
@@ -79,8 +79,9 @@ class CucaraSims(gobject.GObject):
                     tipo = cursor[0].tipo
                     self.set_cursor(False, False)
                     for alimento in alimentos:
-                        self.alimentos.remove(alimento)
-                        alimento.kill()
+                        if alimento.tipo == tipo:
+                            self.alimentos.remove(alimento)
+                            alimento.kill()
                     self.alimentos.add(Alimento(tipo, (event.pos)))
                     self.emit("clear-cursor-gtk")
         pygame.event.clear()
