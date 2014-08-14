@@ -94,19 +94,24 @@ class Cucaracha(Sprite, gobject.GObject):
             self.__set_muda(escala=self.mudas[self.edad["Dias"]])
             self.emit("muda")
         elif self.edad["Dias"] in self.repro and self.edad["Horas"] == 0:
-            self.emit("reproduce", (self.angulo,
-                self.rect.centerx, self.rect.centery))
-            #Fixme: Si es hembra y hay machos en el escenario
+            if self.sexo == "hembra":
+                grupo = self.groups()
+                cucas = grupo[0].sprites()
+                for cuca in cucas:
+                    if cuca != self and cuca.sexo == "macho" and \
+                        cuca.edad["Dias"] >= 190:
+                        self.emit("reproduce", (self.angulo,
+                            self.rect.centerx, self.rect.centery))
+                        break
         elif self.edad["Dias"] >= self.muerte:
             self.emit("muere", (self.angulo,
                 self.rect.centerx, self.rect.centery), self.escala)
             self.morir()
+
         self.agua -= 1.0
         self.alimento -= 1.0
         if self.agua < -180.0 or self.alimento < -300.0:
             self.morir()
-        else:
-            print self.agua, self.alimento
 
     def __actualizar_posicion(self):
         x = self.rect.centerx + self.dx

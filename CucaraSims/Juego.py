@@ -174,6 +174,25 @@ class CucaraSims(gobject.GObject):
     def __des_pausar(self, objeto):
         objeto.timer.new_handle(True)
 
+    def __control_de_poblacion(self):
+        if len(self.cucas.sprites()) >= 15:
+            self.emit("lectura", "plaga")
+        else:
+            huevos = self.huevos.sprites()
+            cucas = self.cucas.sprites()
+            machos = 0
+            hembras = 0
+            rh = 0
+            for cuca in cucas:
+                if cuca.sexo == "macho":
+                    machos += 1
+                elif cuca.sexo == "hembra":
+                    hembras += 1
+                    if cuca.edad["Dias"] < 331:
+                        rh += 1
+            if not huevos and (not rh and not machos):
+                self.emit("lectura", "extincion")
+
     def set_cursor(self, widget, tipo):
         """
         Cuando el usuario selecciona alimento o agua en la interfaz gtk,
@@ -218,10 +237,6 @@ class CucaraSims(gobject.GObject):
                 self.reloj.tick(35)
                 while gtk.events_pending():
                     gtk.main_iteration()
-                #if len(self.cucas.cucas()) < 5:
-                #    gobject.idle_add(self.cucas.add,
-                #        Bicho(RESOLUCION_INICIAL[0],
-                #        RESOLUCION_INICIAL[1]))
                 self.huevos.clear(self.ventana, self.escenario)
                 self.alimentos.clear(self.ventana, self.escenario)
                 self.muertas.clear(self.ventana, self.escenario)
@@ -241,8 +256,7 @@ class CucaraSims(gobject.GObject):
                 self.ventana_real.blit(pygame.transform.scale(
                     self.ventana, self.resolucionreal), (0, 0))
                 pygame.display.update()
-                if len(self.cucas.sprites()) >= 15:
-                    self.emit("lectura", "plaga")
+                self.__control_de_poblacion()
                 pygame.time.wait(3)
         except:
             pass

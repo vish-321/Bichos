@@ -117,6 +117,7 @@ class CucaraSimsWidget(gtk.HPaned):
         """
         El Juego pygame manda abrir una lectura.
         """
+        print lectura, self.run_lectura
         if not lectura in self.lecciones:
             self.lecciones.append(lectura)
             self.get_toplevel().juego.pause()
