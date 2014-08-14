@@ -212,4 +212,5 @@ class ButtonImagen(gtk.EventBox):
         self.connect("button-press-event", self.__clicked_image)
 
     def __clicked_image(self, imagen, event):
-        self.emit("select", self.tipo)
+        if event.button == 1:
+            self.emit("select", self.tipo)

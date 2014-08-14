@@ -73,6 +73,7 @@ class CucaraSims(gobject.GObject):
                 if cursor:
                     cursor[0].pos(event.pos)
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                # FIXME: Considerar diferentes Botones del Mouse
                 cursor = self.mouse.sprites()
                 alimentos = self.alimentos.sprites()
                 if cursor:
@@ -84,6 +85,14 @@ class CucaraSims(gobject.GObject):
                             alimento.kill()
                     self.alimentos.add(Alimento(tipo, (event.pos)))
                     self.emit("clear-cursor-gtk")
+                else:
+                    print event
+                    # Fixme: Casos a Considerar:
+                    # Click sobre Cuca
+                    # Click sobre alimento
+                    # Click sobre ooteca
+                    # Click sobre muerta
+                    # Click sobre el fondo
         pygame.event.clear()
 
     def __stop_timer(self, objeto):
@@ -220,7 +229,8 @@ class CucaraSims(gobject.GObject):
                 self.mouse.clear(self.ventana, self.escenario)
                 #self.huevos.update()
                 #self.muertas.update()
-                self.cucas.update()
+                self.cucas.update(self.alimentos.sprites())
+                self.alimentos.update()
                 self.mouse.update()
                 self.__handle_event()
                 self.huevos.draw(self.ventana)

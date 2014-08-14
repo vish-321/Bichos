@@ -39,8 +39,8 @@ class Cucaracha(Sprite, gobject.GObject):
         gobject.GObject.__init__(self)
 
         self.sexo = sexo
-        self.hambre = 0
-        self.sed = 0
+        self.alimento = 0.0
+        self.agua = 0.0
 
         random.seed()
         path = ""
@@ -101,6 +101,12 @@ class Cucaracha(Sprite, gobject.GObject):
             self.emit("muere", (self.angulo,
                 self.rect.centerx, self.rect.centery), self.escala)
             self.morir()
+        self.agua -= 1.0
+        self.alimento -= 1.0
+        if self.agua < -180.0 or self.alimento < -300.0:
+            self.morir()
+        else:
+            print self.agua, self.alimento
 
     def __actualizar_posicion(self):
         x = self.rect.centerx + self.dx
@@ -137,7 +143,32 @@ class Cucaracha(Sprite, gobject.GObject):
         self.rect.centerx = x
         self.rect.centery = y
 
-    def update(self):
+    def __check_collide_alimentos(self, alimentos):
+        valor = False
+        for alimento in alimentos:
+            if self.rect.colliderect(alimento.rect):
+                if alimento.tipo == "agua":
+                    if self.agua >= 250:
+                        pass
+                    elif self.agua < 250:
+                        self.agua += 0.1
+                        alimento.cantidad -= 0.1
+                        valor = True
+                elif alimento.tipo == "alimento":
+                    if self.alimento >= 250:
+                        pass
+                    else:
+                        self.alimento += 0.1
+                        alimento.cantidad -= 0.1
+                        valor = True
+        return valor
+
+    def update(self, alimentos):
+        alimentandose = self.__check_collide_alimentos(alimentos)
+        if alimentandose:
+            return
+        else:
+            pass
         acciones = ["camina", "gira", "quieto"]
         random.seed()
         accion = random.choice(acciones)
@@ -183,7 +214,8 @@ class Cucaracha(Sprite, gobject.GObject):
 
     def morir(self):
         self.timer.salir()
-        self.emit("muere", (self.rect.centerx, self.rect.centery), self.escala)
+        self.emit("muere", (self.angulo, self.rect.centerx,
+            self.rect.centery), self.escala)
         self.kill()
 
 

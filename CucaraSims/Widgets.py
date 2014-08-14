@@ -95,7 +95,7 @@ class Alimento(Sprite):
         Sprite.__init__(self)
 
         self.tipo = tipo
-        self.cantidad = 150
+        self.cantidad = 1500.0
 
         path = ""
         if self.tipo == "agua":
@@ -108,3 +108,7 @@ class Alimento(Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = pos[0]
         self.rect.centery = pos[1]
+
+    def update(self):
+        if self.cantidad <= 0.0:
+            self.kill()
