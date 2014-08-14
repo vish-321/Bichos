@@ -91,6 +91,7 @@ class Bichos(gtk.Window):
         self.widgetjuego.connect("set-cursor", self.juego.set_cursor)
         self.juego.connect("exit", self.__run_games, "menu")
         self.juego.connect("lectura", self.widgetjuego.run_lectura)
+        self.juego.connect("clear-cursor-gtk", self.widgetjuego.clear_cursor)
         self.juego.config()
         self.juego.run()
         return False

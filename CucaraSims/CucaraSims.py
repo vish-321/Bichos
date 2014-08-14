@@ -94,6 +94,9 @@ class CucaraSimsWidget(gtk.HPaned):
             else:
                 win.set_cursor(self.alimento_cursor)
                 self.cursor_tipo = "alimento"
+        else:
+            win.set_cursor(self.cursor_root)
+            self.cursor_tipo = False
         self.emit("set-cursor", self.cursor_tipo)
 
     def __run_lectura(self, derecha, lectura):
@@ -101,7 +104,6 @@ class CucaraSimsWidget(gtk.HPaned):
             #self.emit("exit")
             #FIXME: Dialogo para confirmar salir
             return
-
         self.get_toplevel().juego.pause()
         dialog = Widget_Leccion(
             parent=self.get_toplevel(), lectura=lectura)
@@ -119,8 +121,11 @@ class CucaraSimsWidget(gtk.HPaned):
             dialog.destroy()
             self.get_toplevel().juego.unpause()
 
-    def salir(self):
-        print self.salir
+    def clear_cursor(self, widget):
+        """
+        El juego pygame indica que ya no debe haber cursor personalizado.
+        """
+        self.__set_cursor(False, False)
 
 
 class Derecha(gtk.EventBox):

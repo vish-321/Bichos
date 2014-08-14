@@ -12,7 +12,8 @@ from Cucaracha import Cucaracha
 from Cucaracha import Muerta
 from Huevos import Huevo
 from Timer import Timer
-from Cursor import Cursor
+from Widgets import Cursor
+from Widgets import Alimento
 
 RESOLUCION_INICIAL = (800, 600)
 TIME = 1
@@ -29,7 +30,9 @@ class CucaraSims(gobject.GObject):
     "exit": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, []),
     "lectura": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
+    "clear-cursor-gtk": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, [])}
 
     def __init__(self):
 
@@ -54,6 +57,7 @@ class CucaraSims(gobject.GObject):
         self.huevos = pygame.sprite.RenderUpdates()
         self.muertas = pygame.sprite.RenderUpdates()
         self.mouse = pygame.sprite.RenderUpdates()
+        self.alimentos = pygame.sprite.RenderUpdates()
 
         self.cursor_agua = False
         self.cursor_pan = False
@@ -69,9 +73,16 @@ class CucaraSims(gobject.GObject):
                 if cursor:
                     cursor[0].pos(event.pos)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                # FIXME: dejar alimento o agua en el escenario
-                # resetear cursor en pygame y gtk
-                print event
+                cursor = self.mouse.sprites()
+                alimentos = self.alimentos.sprites()
+                if cursor:
+                    tipo = cursor[0].tipo
+                    self.set_cursor(False, False)
+                    for alimento in alimentos:
+                        self.alimentos.remove(alimento)
+                        alimento.kill()
+                    self.alimentos.add(Alimento(tipo, (event.pos)))
+                    self.emit("clear-cursor-gtk")
         pygame.event.clear()
 
     def __stop_timer(self, objeto):
@@ -202,6 +213,7 @@ class CucaraSims(gobject.GObject):
                 #        Bicho(RESOLUCION_INICIAL[0],
                 #        RESOLUCION_INICIAL[1]))
                 self.huevos.clear(self.ventana, self.escenario)
+                self.alimentos.clear(self.ventana, self.escenario)
                 self.muertas.clear(self.ventana, self.escenario)
                 self.cucas.clear(self.ventana, self.escenario)
                 self.mouse.clear(self.ventana, self.escenario)
@@ -211,6 +223,7 @@ class CucaraSims(gobject.GObject):
                 self.mouse.update()
                 self.__handle_event()
                 self.huevos.draw(self.ventana)
+                self.alimentos.draw(self.ventana)
                 self.muertas.draw(self.ventana)
                 self.cucas.draw(self.ventana)
                 self.mouse.draw(self.ventana)
@@ -224,6 +237,7 @@ class CucaraSims(gobject.GObject):
             pass
 
     def salir(self, widget=False):
+        self.emit("clear-cursor-gtk")
         self.estado = 0
         self.timer.salir()
         map(self.__stop_timer, self.cucas.sprites())
