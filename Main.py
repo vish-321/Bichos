@@ -94,6 +94,7 @@ class Bichos(gtk.Window):
         self.juego.connect("exit", self.__dialog_exit_game, "CucaraSims")
         self.juego.connect("lectura", self.widgetjuego.run_lectura)
         self.juego.connect("clear-cursor-gtk", self.widgetjuego.clear_cursor)
+        self.juego.connect("update", self.widgetjuego.update)
         self.juego.config()
         self.juego.run()
         return False

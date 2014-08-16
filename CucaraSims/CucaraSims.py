@@ -113,6 +113,12 @@ class CucaraSimsWidget(gtk.HPaned):
         dialog.destroy()
         self.get_toplevel().juego.unpause()
 
+    def update(self, juego, edad):
+        """
+        El juego pygame actualiza información en la interfaz gtk.
+        """
+        print edad
+
     def run_lectura(self, juego, lectura):
         """
         El Juego pygame manda abrir una lectura.

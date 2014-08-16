@@ -11,7 +11,10 @@ from pygame.sprite import Sprite
 import random
 from math import sin
 from math import cos
+from math import atan2
+from math import atan
 from math import radians
+import math
 
 from Timer import Timer
 
@@ -41,6 +44,7 @@ class Cucaracha(Sprite, gobject.GObject):
         self.sexo = sexo
         self.alimento = 0.0
         self.agua = 0.0
+        self.marca = False
 
         random.seed()
         path = ""
@@ -117,8 +121,8 @@ class Cucaracha(Sprite, gobject.GObject):
         x = self.rect.centerx + self.dx
         y = self.rect.centery + self.dy
         if self.escena.collidepoint(x, y):
-            self.image = pygame.transform.rotate(
-                self.imagen_original, -self.angulo)
+            #self.image = pygame.transform.rotate(
+            #    self.imagen_original, -self.angulo)
             self.rect.centerx = x
             self.rect.centery = y
         else:
@@ -172,23 +176,44 @@ class Cucaracha(Sprite, gobject.GObject):
         alimentandose = self.__check_collide_alimentos(alimentos)
         if alimentandose:
             return
+
+        if alimentos:
+            if self.marca:
+                acciones = ["camina", "gira", "quieto"]
+                random.seed()
+                accion = random.choice(acciones)
+                if accion == "camina":
+                    self.__actualizar_posicion()
+            else:
+                # http://www.vitutor.com/geo/rec/d_4.html
+                x2, y2 = alimentos[0].rect.centerx, alimentos[0].rect.centery
+                x1, y1 = self.rect.centerx, self.rect.centery
+                self.angulo = 180*math.atan2(y2-y1, x2-x1)/3.1416
+                #self.angulo = math.degrees(math.atan2(x2-x1, y2-y1))
+                self.image = pygame.transform.rotate(
+                    self.imagen_original, -self.angulo)
+                self.dx, self.dy = self.__get_vector(self.angulo)
+                self.marca = True
         else:
-            pass
-        acciones = ["camina", "gira", "quieto"]
-        random.seed()
-        accion = random.choice(acciones)
-        if accion == "gira":
-            sent = random.randrange(1, 3, 1)
-            if sent == 1:
-                self.angulo -= int(0.7 * INDICE_ROTACION)
-                if self.angulo < -360:
-                    self.angulo += 360
-            elif sent == 2:
-                self.angulo += int(0.7 * INDICE_ROTACION)
-                if self.angulo > 360:
-                    self.angulo -= 360
-            self.dx, self.dy = self.__get_vector(self.angulo)
-            self.__actualizar_posicion()
+            self.marca = False
+            acciones = ["camina", "gira", "quieto"]
+            random.seed()
+            accion = random.choice(acciones)
+            if accion == "gira":
+                sent = random.randrange(1, 3, 1)
+                if sent == 1:
+                    self.angulo -= int(0.7 * INDICE_ROTACION)
+                    if self.angulo < -360:
+                        self.angulo += 360
+                elif sent == 2:
+                    self.angulo += int(0.7 * INDICE_ROTACION)
+                    if self.angulo > 360:
+                        self.angulo -= 360
+                self.image = pygame.transform.rotate(
+                    self.imagen_original, -self.angulo)
+                self.dx, self.dy = self.__get_vector(self.angulo)
+            elif accion == "camina":
+                self.__actualizar_posicion()
 
     def set_edad(self, dias, horas):
         """

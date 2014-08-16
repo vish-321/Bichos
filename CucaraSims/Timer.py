@@ -46,7 +46,7 @@ class Timer(gobject.GObject):
             {"Años": self.anios,
             "Dias": self.dias,
             "Horas": self.horas})
-        return True
+        return bool(self.actualizador)
 
     def new_handle(self, reset):
         if self.actualizador:

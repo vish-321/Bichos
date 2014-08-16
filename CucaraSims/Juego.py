@@ -32,7 +32,9 @@ class CucaraSims(gobject.GObject):
     "lectura": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
     "clear-cursor-gtk": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, [])}
+        gobject.TYPE_NONE, []),
+    "update": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
 
     def __init__(self):
 
@@ -86,7 +88,6 @@ class CucaraSims(gobject.GObject):
                         self.alimentos.add(Alimento(tipo, (event.pos)))
                         self.emit("clear-cursor-gtk")
                     else:
-                        print event.button
                         # Fixme: Casos a Considerar:
                         # Click sobre Cuca
                         for alimento in alimentos:
@@ -126,6 +127,30 @@ class CucaraSims(gobject.GObject):
         Actualiza el Tiempo de Juego.
         """
         self.edad = dict(_dict)
+        dic = dict(_dict)
+        machos = 0
+        hembras = 0
+        cucas = self.cucas.sprites()
+        for cuca in cucas:
+            if cuca.sexo == "macho":
+                machos += 1
+            elif cuca.sexo == "hembra":
+                hembras += 1
+        alimentos = self.alimentos.sprites()
+        alimento = 0
+        agua = 0
+        for alim in alimentos:
+            if alim.tipo == "alimento":
+                alimento = alim.cantidad
+            elif alim.tipo == "agua":
+                agua = alim.cantidad
+        dic["cucas"] = len(cucas)
+        dic["hembras"] = hembras
+        dic["machos"] = machos
+        dic["ootecas"] = len(self.huevos.sprites())
+        dic["alimento"] = alimento
+        dic["agua"] = agua
+        self.emit("update", dic)
 
     def __event_muda(self, cuca):
         """
