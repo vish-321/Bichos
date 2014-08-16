@@ -44,7 +44,6 @@ class Cucaracha(Sprite, gobject.GObject):
         self.sexo = sexo
         self.alimento = 0.0
         self.agua = 0.0
-        self.marca = False
 
         random.seed()
         path = ""
@@ -178,24 +177,21 @@ class Cucaracha(Sprite, gobject.GObject):
             return
 
         if alimentos:
-            if self.marca:
-                acciones = ["camina", "gira", "quieto"]
-                random.seed()
-                accion = random.choice(acciones)
-                if accion == "camina":
-                    self.__actualizar_posicion()
-            else:
+            acciones = ["camina", "gira", "quieto"]
+            random.seed()
+            accion = random.choice(acciones)
+            if accion == "camina":
+                self.__actualizar_posicion()
+            elif accion == "gira":
                 # http://www.vitutor.com/geo/rec/d_4.html
                 x2, y2 = alimentos[0].rect.centerx, alimentos[0].rect.centery
                 x1, y1 = self.rect.centerx, self.rect.centery
-                self.angulo = 180*math.atan2(y2-y1, x2-x1)/3.1416
-                #self.angulo = math.degrees(math.atan2(x2-x1, y2-y1))
+                #self.angulo = int(180*math.atan2(y2-y1, x2-x1)/3.1416)
+                self.angulo = int(math.degrees(math.atan2(y2-y1, x2-x1)))
                 self.image = pygame.transform.rotate(
                     self.imagen_original, -self.angulo)
                 self.dx, self.dy = self.__get_vector(self.angulo)
-                self.marca = True
         else:
-            self.marca = False
             acciones = ["camina", "gira", "quieto"]
             random.seed()
             accion = random.choice(acciones)
