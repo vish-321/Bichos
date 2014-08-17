@@ -41,9 +41,12 @@ class Cucaracha(Sprite, gobject.GObject):
         Sprite.__init__(self)
         gobject.GObject.__init__(self)
 
+        self.acciones = ["camina", "gira", "quieto"]
         self.sexo = sexo
         self.alimento = 0.0
         self.agua = 0.0
+        self.accion = "camina"
+        self.contador = 0
 
         random.seed()
         path = ""
@@ -119,13 +122,29 @@ class Cucaracha(Sprite, gobject.GObject):
     def __actualizar_posicion(self):
         x = self.rect.centerx + self.dx
         y = self.rect.centery + self.dy
+        '''
+        if not self.escena.colliderect(self.rect):
+            if x > self.escena.width:
+                x = 0
+            elif x < 0:
+                x = self.escena.width
+            if y > self.escena.height:
+                y = 0
+            elif y < 0:
+                y = self.escena.height
+
+        self.rect.centerx = x
+        self.rect.centery = y
+        '''
         if self.escena.collidepoint(x, y):
-            #self.image = pygame.transform.rotate(
-            #    self.imagen_original, -self.angulo)
             self.rect.centerx = x
             self.rect.centery = y
+
         else:
-            self.angulo = self.angulo * 1.25
+            self.angulo += int(0.7 * INDICE_ROTACION)
+            if self.angulo > 360:
+                self.angulo -= 360
+            #self.angulo = self.angulo * 1.25
             self.image = pygame.transform.rotate(
                 self.imagen_original, -self.angulo)
             self.dx = 0
@@ -171,45 +190,57 @@ class Cucaracha(Sprite, gobject.GObject):
                         valor = True
         return valor
 
+    def __buscar(self, alimentos):
+        random.seed()
+        self.accion = random.choice(["camina", "gira"])
+        if self.accion == "camina":
+            self.__actualizar_posicion()
+        elif self.accion == "gira":
+            random.seed()
+            alimento = alimentos[0]
+            x2, y2 = alimento.rect.centerx, alimento.rect.centery
+            x1, y1 = self.rect.centerx, self.rect.centery
+            # http://www.vitutor.com/geo/rec/d_4.html
+            self.angulo = int(math.degrees(math.atan2(y2-y1, x2-x1)))
+            self.image = pygame.transform.rotate(
+                self.imagen_original, -self.angulo)
+            self.dx, self.dy = self.__get_vector(self.angulo)
+
+    def __decidir(self):
+        if self.contador >= 10:
+            random.seed()
+            self.accion = random.choice(self.acciones)
+            self.contador = 0
+
+        if self.accion == "gira":
+            sent = random.randrange(1, 3, 1)
+            if sent == 1:
+                self.angulo -= int(0.7 * INDICE_ROTACION)
+                if self.angulo < -360:
+                    self.angulo += 360
+            elif sent == 2:
+                self.angulo += int(0.7 * INDICE_ROTACION)
+                if self.angulo > 360:
+                    self.angulo -= 360
+
+            self.image = pygame.transform.rotate(
+                self.imagen_original, -self.angulo)
+            self.dx, self.dy = self.__get_vector(self.angulo)
+            self.__actualizar_posicion()
+
+        elif self.accion == "camina":
+            self.__actualizar_posicion()
+
+        self.contador += 1
+
     def update(self, alimentos):
-        alimentandose = self.__check_collide_alimentos(alimentos)
-        if alimentandose:
+        if self.__check_collide_alimentos(alimentos):
             return
 
         if alimentos:
-            acciones = ["camina", "gira", "quieto"]
-            random.seed()
-            accion = random.choice(acciones)
-            if accion == "camina":
-                self.__actualizar_posicion()
-            elif accion == "gira":
-                # http://www.vitutor.com/geo/rec/d_4.html
-                x2, y2 = alimentos[0].rect.centerx, alimentos[0].rect.centery
-                x1, y1 = self.rect.centerx, self.rect.centery
-                #self.angulo = int(180*math.atan2(y2-y1, x2-x1)/3.1416)
-                self.angulo = int(math.degrees(math.atan2(y2-y1, x2-x1)))
-                self.image = pygame.transform.rotate(
-                    self.imagen_original, -self.angulo)
-                self.dx, self.dy = self.__get_vector(self.angulo)
+            self.__buscar(alimentos)
         else:
-            acciones = ["camina", "gira", "quieto"]
-            random.seed()
-            accion = random.choice(acciones)
-            if accion == "gira":
-                sent = random.randrange(1, 3, 1)
-                if sent == 1:
-                    self.angulo -= int(0.7 * INDICE_ROTACION)
-                    if self.angulo < -360:
-                        self.angulo += 360
-                elif sent == 2:
-                    self.angulo += int(0.7 * INDICE_ROTACION)
-                    if self.angulo > 360:
-                        self.angulo -= 360
-                self.image = pygame.transform.rotate(
-                    self.imagen_original, -self.angulo)
-                self.dx, self.dy = self.__get_vector(self.angulo)
-            elif accion == "camina":
-                self.__actualizar_posicion()
+            self.__decidir()
 
     def set_edad(self, dias, horas):
         """
