@@ -34,7 +34,7 @@ class Huevo(Sprite, gobject.GObject):
         self.image = self.imagen_original.copy()
         self.image = pygame.transform.rotate(
             self.imagen_original, -pos[0])
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_bounding_rect()
 
         self.rect.centerx = pos[1]
         self.rect.centery = pos[2]

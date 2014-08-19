@@ -46,6 +46,8 @@ class Cucaracha(Sprite, gobject.GObject):
         self.agua = 0.0
         self.accion = "camina"
         self.contador = 0
+        random.seed()
+        self.sentido = random.choice(["+", "-"])
 
         random.seed()
         path = ""
@@ -69,7 +71,7 @@ class Cucaracha(Sprite, gobject.GObject):
         self.escena = pygame.Rect(35, 35, ancho - 70, alto - 70)
 
         self.image = self.imagen_original.copy()
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_bounding_rect()
 
         self.rect.centerx = self.escena.w / 2
         self.rect.centery = self.escena.h / 2
@@ -121,29 +123,30 @@ class Cucaracha(Sprite, gobject.GObject):
     def __actualizar_posicion(self):
         x = self.rect.centerx + self.dx
         y = self.rect.centery + self.dy
-        '''
-        if not self.escena.colliderect(self.rect):
-            if x > self.escena.width:
-                x = 0
-            elif x < 0:
-                x = self.escena.width
-            if y > self.escena.height:
-                y = 0
-            elif y < 0:
-                y = self.escena.height
-
-        self.rect.centerx = x
-        self.rect.centery = y
-        '''
+        # FIXME: Sin límite en el habitat
+        #if not self.escena.colliderect(self.rect):
+        #    if x > self.escena.width:
+        #        x = 0
+        #    elif x < 0:
+        #        x = self.escena.width
+        #    if y > self.escena.height:
+        #        y = 0
+        #    elif y < 0:
+        #        y = self.escena.height
+        #self.rect.centerx = x
+        #self.rect.centery = y
         if self.escena.collidepoint(x, y):
             self.rect.centerx = x
             self.rect.centery = y
-
         else:
-            self.angulo += int(0.7 * INDICE_ROTACION)
-            if self.angulo > 360:
-                self.angulo -= 360
-            #self.angulo = self.angulo * 1.25
+            if self.sentido == "+":
+                self.angulo += int(0.7 * INDICE_ROTACION)
+                if self.angulo > 360:
+                    self.angulo -= 360
+            else:
+                self.angulo -= int(0.7 * INDICE_ROTACION)
+                if self.angulo < -360:
+                    self.angulo += 360
             self.image = pygame.transform.rotate(
                 self.imagen_original, -self.angulo)
             self.dx = 0

@@ -88,7 +88,7 @@ class Cursor(Sprite):
 
         self.image = pygame.image.load(path)
         # pygame.transform.scale(pygame.image.load(path), (24, 48))
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_bounding_rect()
 
     def pos(self, pos):
         self.rect.centerx = pos[0]
@@ -112,7 +112,7 @@ class Alimento(Sprite):
 
         self.image = pygame.image.load(path)
         # pygame.transform.scale(pygame.image.load(path), (24, 48))
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_bounding_rect()
         self.rect.centerx = pos[0]
         self.rect.centery = pos[1]
 
@@ -129,14 +129,131 @@ class Toolbar(gtk.EventBox):
 
         toolbar = gtk.Toolbar()
 
-        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
-        toolbar.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        toolbar.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+
+        toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
+        imagen = gtk.Image()
+        icono = os.path.join(BASE_PATH, "Imagenes", "cucaracha2.png")
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono,
+            -1, 24)
+        imagen.set_from_pixbuf(pixbuf)
+        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
+        imagen.show()
+        item = gtk.ToolItem()
+        item.add(imagen)
+        toolbar.insert(item, -1)
+
+        item = gtk.ToolItem()
+        self.labelcucas = gtk.Label(" 0H + 0M = 0")
+        self.labelcucas.modify_fg(gtk.STATE_NORMAL,
+            gtk.gdk.color_parse("#000000"))
+        self.labelcucas.show()
+        item.add(self.labelcucas)
+        toolbar.insert(item, -1)
+
+        toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
+        imagen = gtk.Image()
+        icono = os.path.join(BASE_PATH, "Imagenes", "huevos.png")
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono,
+            -1, 24)
+        imagen.set_from_pixbuf(pixbuf)
+        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
+        imagen.show()
+        item = gtk.ToolItem()
+        item.add(imagen)
+        toolbar.insert(item, -1)
+
+        item = gtk.ToolItem()
+        self.labelootecas = gtk.Label(" = 0")
+        self.labelootecas.modify_fg(gtk.STATE_NORMAL,
+            gtk.gdk.color_parse("#000000"))
+        self.labelootecas.show()
+        item.add(self.labelootecas)
+        toolbar.insert(item, -1)
+
+        #toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
+        imagen = gtk.Image()
+        icono = os.path.join(BASE_PATH, "Imagenes", "jarra.png")
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono, -1, 24)
+        imagen.set_from_pixbuf(pixbuf)
+        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
+        imagen.show()
+        item = gtk.ToolItem()
+        item.add(imagen)
+        toolbar.insert(item, -1)
+
+        item = gtk.ToolItem()
+        self.labelagua = gtk.Label(" = 0")
+        self.labelagua.modify_fg(gtk.STATE_NORMAL,
+            gtk.gdk.color_parse("#000000"))
+        self.labelagua.show()
+        item.add(self.labelagua)
+        toolbar.insert(item, -1)
+
+        toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
+        imagen = gtk.Image()
+        icono = os.path.join(BASE_PATH, "Imagenes", "pan.png")
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono, -1, 24)
+        imagen.set_from_pixbuf(pixbuf)
+        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
+        imagen.show()
+        item = gtk.ToolItem()
+        item.add(imagen)
+        toolbar.insert(item, -1)
+
+        item = gtk.ToolItem()
+        self.labelalimento = gtk.Label(" = 0")
+        self.labelalimento.modify_fg(gtk.STATE_NORMAL,
+            gtk.gdk.color_parse("#000000"))
+        self.labelalimento.show()
+        item.add(self.labelalimento)
+        toolbar.insert(item, -1)
 
         toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
 
         item = gtk.ToolItem()
-        self.label = gtk.Label("")
-        self.label.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        self.labeltiempo = gtk.Label(" Años: 0 Dias: 0 Horas: 0")
+        self.labeltiempo.modify_fg(gtk.STATE_NORMAL,
+            gtk.gdk.color_parse("#000000"))
+        self.labeltiempo.show()
+        item.add(self.labeltiempo)
+        toolbar.insert(item, -1)
+
+        toolbar.insert(get_separador(draw=False, ancho=0, expand=True), -1)
+
+        self.add(toolbar)
+        self.show_all()
+
+    def set_info(self, infocucas, infoootecas, infoagua, infoalimento, tiempo):
+        self.labelcucas.set_text(infocucas)
+        self.labelootecas.set_text(infoootecas)
+        self.labelagua.set_text(infoagua)
+        self.labelalimento.set_text(infoalimento)
+        self.labeltiempo.set_text(tiempo)
+
+
+class ToolbarEstado(gtk.EventBox):
+
+    def __init__(self):
+
+        gtk.EventBox.__init__(self)
+
+        toolbar = gtk.Toolbar()
+
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        toolbar.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+
+        toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
+        item = gtk.ToolItem()
+        self.label = gtk.Label()
+        self.label.modify_fg(gtk.STATE_NORMAL,
+            gtk.gdk.color_parse("#000000"))
         self.label.show()
         item.add(self.label)
         toolbar.insert(item, -1)
