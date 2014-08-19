@@ -24,6 +24,7 @@ import gtk
 import gobject
 
 from Widgets import Widget_Leccion
+from Widgets import Toolbar
 
 BASE_PATH = os.path.dirname(__file__)
 
@@ -36,7 +37,7 @@ class CucaraSimsWidget(gtk.HPaned):
     "set-cursor": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
 
-    def __init__(self):
+    def __init__(self, escenario):
 
         gtk.HPaned.__init__(self)
 
@@ -44,6 +45,12 @@ class CucaraSimsWidget(gtk.HPaned):
 
         self.lecciones = []
 
+        self.toolbar = Toolbar()
+        vbox = gtk.VBox()
+        vbox.pack_start(self.toolbar, False, False, 0)
+        vbox.pack_start(escenario, True, True, 0)
+
+        self.pack1(vbox, resize=True, shrink=True)
         derecha = Derecha()
         self.pack2(derecha, resize=False, shrink=False)
 
@@ -113,11 +120,17 @@ class CucaraSimsWidget(gtk.HPaned):
         dialog.destroy()
         self.get_toplevel().juego.unpause()
 
-    def update(self, juego, edad):
+    def update(self, juego, _dict):
         """
         El juego pygame actualiza información en la interfaz gtk.
         """
-        print edad
+        info = "Cucarachas: %s" % _dict["cucas"]
+        info = "%s - %s" % (info, "Hembras: %s" % _dict["hembras"])
+        info = "%s - %s" % (info, "Machos: %s" % _dict["machos"])
+        info = "%s - %s" % (info, "Huevos: %s" % _dict["ootecas"])
+        info = "%s - %s" % (info, "Alimento: %s" % int(_dict["alimento"]))
+        info = "%s - %s" % (info, "Agua: %s" % int(_dict["agua"]))
+        self.toolbar.set_info(info)
 
     def run_lectura(self, juego, lectura):
         """

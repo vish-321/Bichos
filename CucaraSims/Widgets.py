@@ -21,11 +21,18 @@
 
 import os
 import gtk
-import gobject
 import pygame
 from pygame.sprite import Sprite
 
 BASE_PATH = os.path.dirname(__file__)
+
+
+def get_separador(draw=False, ancho=0, expand=False):
+    separador = gtk.SeparatorToolItem()
+    separador.props.draw = draw
+    separador.set_size_request(ancho, -1)
+    separador.set_expand(expand)
+    return separador
 
 
 class Widget_Leccion(gtk.Dialog):
@@ -48,7 +55,7 @@ class Widget_Leccion(gtk.Dialog):
         parent.connect("check-resize", self.__resize)
 
     def __resize(self, parent):
-        rect =  parent.get_allocation()
+        rect = parent.get_allocation()
         self.set_size_request(rect.width, rect.height)
 
 
@@ -112,3 +119,32 @@ class Alimento(Sprite):
     def update(self):
         if self.cantidad <= 0.0:
             self.kill()
+
+
+class Toolbar(gtk.EventBox):
+
+    def __init__(self):
+
+        gtk.EventBox.__init__(self)
+
+        toolbar = gtk.Toolbar()
+
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+        toolbar.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+
+        toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
+        item = gtk.ToolItem()
+        self.label = gtk.Label("")
+        self.label.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+        self.label.show()
+        item.add(self.label)
+        toolbar.insert(item, -1)
+
+        toolbar.insert(get_separador(draw=False, ancho=0, expand=True), -1)
+
+        self.add(toolbar)
+        self.show_all()
+
+    def set_info(self, info):
+        self.label.set_text(info)

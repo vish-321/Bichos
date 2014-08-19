@@ -12,9 +12,8 @@ import random
 from math import sin
 from math import cos
 from math import atan2
-from math import atan
 from math import radians
-import math
+from math import degrees
 
 from Timer import Timer
 
@@ -197,11 +196,12 @@ class Cucaracha(Sprite, gobject.GObject):
             self.__actualizar_posicion()
         elif self.accion == "gira":
             random.seed()
+            # FIXME: Elegir según máxima necesidad
             alimento = alimentos[0]
             x2, y2 = alimento.rect.centerx, alimento.rect.centery
             x1, y1 = self.rect.centerx, self.rect.centery
             # http://www.vitutor.com/geo/rec/d_4.html
-            self.angulo = int(math.degrees(math.atan2(y2-y1, x2-x1)))
+            self.angulo = int(degrees(atan2(y2 - y1, x2 - x1)))
             self.image = pygame.transform.rotate(
                 self.imagen_original, -self.angulo)
             self.dx, self.dy = self.__get_vector(self.angulo)

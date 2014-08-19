@@ -153,13 +153,12 @@ class Bichos(gtk.Window):
 
         elif valor == 2:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
-            self.widgetjuego = CucaraSimsWidget()
             escenario = Escenario()
             escenario.modify_bg(
                 gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
             escenario.connect("new-size", self.__redraw)
             escenario.connect("mouse-enter", self.__mouse_enter)
-            self.widgetjuego.pack1(escenario, resize=True, shrink=True)
+            self.widgetjuego = CucaraSimsWidget(escenario)
             self.add(self.widgetjuego)
             gobject.idle_add(self.__run_cucarasims, escenario)
 
