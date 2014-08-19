@@ -195,9 +195,16 @@ class Cucaracha(Sprite, gobject.GObject):
         if self.accion == "camina":
             self.__actualizar_posicion()
         elif self.accion == "gira":
-            random.seed()
-            # FIXME: Elegir según máxima necesidad
-            alimento = alimentos[0]
+            necesidad = "agua"
+            alimento = False
+            if self.alimento < self.agua:
+                necesidad = "alimento"
+            for alim in alimentos:
+                if alim.tipo == necesidad:
+                    alimento = alim
+                    break
+            if not alimento:
+                alimento = alimentos[0]
             x2, y2 = alimento.rect.centerx, alimento.rect.centery
             x1, y1 = self.rect.centerx, self.rect.centery
             # http://www.vitutor.com/geo/rec/d_4.html
