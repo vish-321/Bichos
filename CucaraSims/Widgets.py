@@ -91,7 +91,9 @@ class Panel(gtk.HPaned):
             dirpath = os.path.join(BASE_PATH, "Lecturas", "005-Muerte")
         elif lectura == "lectura general":
             dirpath = os.path.join(BASE_PATH, "Lecturas", "General")
-
+        elif lectura == "extinción":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "Extincion")
+        if not dirpath: print "****", lectura
         vbox = gtk.VBox()
         for archivo in os.listdir(dirpath):
             tipo = describe_archivo(os.path.join(dirpath, archivo))

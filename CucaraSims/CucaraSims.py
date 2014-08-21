@@ -161,12 +161,11 @@ class CucaraSimsWidget(gtk.HPaned):
             self.toolbarestado.set_info("Hay nuevas ootecas en el habitat.")
         elif lectura == "ciclo vital":
             self.toolbarestado.set_info("Se han producido nacimientos en el habitat.")
-        elif lectura == "muda":
+        elif lectura == "muda de exoesqueleto":
             self.toolbarestado.set_info("Algunas Cucarachas han realizado la muda de su exoesqueleto.")
         elif lectura == "plaga":
-            #self.toolbarestado.set_info("Hay Demasiadas Cucarachas en el habitat. Algunas migrarán. !!!")
-            pass
-        elif lectura == "extincion":
+            self.toolbarestado.set_info("Hay Demasiadas Cucarachas en el habitat. Algunas migrarán. !!!")
+        elif lectura == "extinción":
             self.toolbarestado.set_info("Ya no es Posible la Reproducción en el Habitat.")
         else:
             print lectura, self.run_lectura
@@ -176,7 +175,7 @@ class CucaraSimsWidget(gtk.HPaned):
         El juego pygame indica que ya no debe haber cursor personalizado.
         """
         self.__set_cursor(False, False)
-        self.toolbarestado.set_info("Las Cucarachas Detectan con sus Antenas, el Alimento en el Habitat.")
+        self.toolbarestado.set_info("Las Cucarachas Detectan el Alimento con sus Antenas.")
 
 
 class Derecha(gtk.EventBox):

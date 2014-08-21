@@ -51,7 +51,7 @@ class Huevo(Sprite, gobject.GObject):
         if self.edad["Dias"] >= 9:
             random.seed()
             huevos = random.randrange(0, 41, 1)
-            hembras = random.randrange(0, 41, 1)
+            hembras = random.randrange(0, huevos, 1)
             machos = huevos - hembras
             self.emit("nacer", (hembras, machos),
                 (self.rect.centerx, self.rect.centery))

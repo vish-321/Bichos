@@ -156,7 +156,7 @@ class CucaraSims(gobject.GObject):
         """
         Una Cucaracha Muda su Exoesqueleto.
         """
-        self.emit("lectura", "muda")
+        self.emit("lectura", "muda de exoesqueleto")
 
     def __event_muerte(self, cuca, pos, escala):
         """
@@ -220,7 +220,7 @@ class CucaraSims(gobject.GObject):
                     if cuca.edad["Dias"] < 331:
                         rh += 1
             if not huevos and (not rh and not machos):
-                self.emit("lectura", "extincion")
+                self.emit("lectura", "extinción")
 
     def set_volumen(self, widget, volumen):
         pygame.mixer.music.set_volume(volumen)
