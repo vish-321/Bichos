@@ -21,6 +21,7 @@
 
 import os
 import gtk
+import gobject
 import pygame
 from pygame.sprite import Sprite
 
@@ -35,6 +36,15 @@ def get_separador(draw=False, ancho=0, expand=False):
     return separador
 
 
+def describe_archivo(archivo):
+    import commands
+    datos = commands.getoutput('file -ik %s%s%s' % ("\"", archivo, "\""))
+    retorno = ""
+    for dat in datos.split(":")[1:]:
+        retorno += " %s" % (dat)
+    return retorno
+
+
 class Widget_Leccion(gtk.Dialog):
 
     def __init__(self, parent=None, lectura=""):
@@ -46,7 +56,8 @@ class Widget_Leccion(gtk.Dialog):
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
         self.set_border_width(15)
 
-        self.vbox.pack_start(Panel(), True, True, 0)
+        self.panel = Panel(lectura)
+        self.vbox.pack_start(self.panel, True, True, 0)
         self.vbox.show_all()
 
         rect = parent.get_allocation()
@@ -61,14 +72,60 @@ class Widget_Leccion(gtk.Dialog):
 
 class Panel(gtk.HPaned):
 
-    def __init__(self):
+    def __init__(self, lectura):
 
         gtk.HPaned.__init__(self)
 
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
 
-        #self.pack1(Derecha(), resize=False, shrink=False)
-        #self.pack2(Derecha(), resize=False, shrink=False)
+        dirpath = False
+        if lectura == "ciclo vital":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "001-Ciclo-Vital")
+        elif lectura == "muda de exoesqueleto":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "002-Muda")
+        elif lectura == "reproducción":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "003-Reproducion")
+        elif lectura == "plaga":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "004-Plaga")
+        elif lectura == "muerte":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "005-Muerte")
+        elif lectura == "lectura general":
+            dirpath = os.path.join(BASE_PATH, "Lecturas", "General")
+
+        vbox = gtk.VBox()
+        for archivo in os.listdir(dirpath):
+            tipo = describe_archivo(os.path.join(dirpath, archivo))
+            if 'video' in tipo or 'application/ogg' in tipo or "image" in tipo:
+                drawing = Visor(os.path.join(dirpath, archivo))
+                vbox.pack_start(drawing, True, True, 0)
+
+        self.pack1(vbox, resize=True, shrink=True)
+
+        self.lectura = gtk.TextView()
+        scroll = gtk.ScrolledWindow()
+        scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scroll.add(self.lectura)
+        self.pack2(scroll, resize=False, shrink=False)
+
+        path = os.path.join(dirpath, "lectura.txt")
+        arch = open(path, "r")
+        text = arch.read()
+        arch.close()
+        self.lectura.get_buffer().set_text(text)
+
+        self.show_all()
+
+
+class Visor(gtk.DrawingArea):
+
+    def __init__(self, archivo):
+
+        gtk.DrawingArea.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+
+        self.archivo = archivo
+
         self.show_all()
 
 
@@ -239,6 +296,10 @@ class Toolbar(gtk.EventBox):
 
 class ToolbarEstado(gtk.EventBox):
 
+    __gsignals__ = {
+    "volumen": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_FLOAT, ))}
+
     def __init__(self):
 
         gtk.EventBox.__init__(self)
@@ -260,8 +321,42 @@ class ToolbarEstado(gtk.EventBox):
 
         toolbar.insert(get_separador(draw=False, ancho=0, expand=True), -1)
 
+        item = gtk.ToolItem()
+        self.volumen = ControlVolumen()
+        self.volumen.connect("value-changed", self.__value_changed)
+        self.volumen.show()
+        item.add(self.volumen)
+        toolbar.insert(item, -1)
+
+        toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
+
         self.add(toolbar)
         self.show_all()
 
+    def __value_changed(self, widget, valor):
+        self.emit('volumen', valor)
+
     def set_info(self, info):
         self.label.set_text(info)
+
+
+class ControlVolumen(gtk.VolumeButton):
+
+    __gsignals__ = {
+    "volumen": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_FLOAT, ))}
+
+    def __init__(self):
+
+        gtk.VolumeButton.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+
+        self.connect("value-changed", self.__value_changed)
+        self.show_all()
+
+        self.set_value(0.1)
+
+    def __value_changed(self, widget, valor):
+        valor = int(valor * 10)
+        self.emit('volumen', valor)

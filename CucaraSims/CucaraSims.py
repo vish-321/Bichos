@@ -36,7 +36,9 @@ class CucaraSimsWidget(gtk.HPaned):
     "exit": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, []),
     "set-cursor": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
+    "volumen": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_FLOAT, ))}
 
     def __init__(self, escenario):
 
@@ -57,6 +59,7 @@ class CucaraSimsWidget(gtk.HPaned):
         derecha = Derecha()
         self.pack2(derecha, resize=False, shrink=False)
 
+        self.toolbarestado.connect("volumen", self.__volumen_changed)
         derecha.connect("select", self.__set_cursor)
         derecha.connect("lectura", self.__run_lectura)
 
@@ -68,6 +71,9 @@ class CucaraSimsWidget(gtk.HPaned):
         self.cursor_tipo = False
 
         gobject.idle_add(self.__config_cursors)
+
+    def __volumen_changed(self, widget, valor):
+        self.emit('volumen', valor)
 
     def __config_cursors(self):
         icono = os.path.join(BASE_PATH, "Imagenes", "jarra.png")
@@ -113,7 +119,7 @@ class CucaraSimsWidget(gtk.HPaned):
         """
         La Interfaz gtk manda abrir una lectura.
         """
-        if lectura == "Salir":
+        if lectura == "salir":
             self.emit("exit")
             return
         self.get_toplevel().juego.pause()
@@ -141,7 +147,6 @@ class CucaraSimsWidget(gtk.HPaned):
         """
         El Juego pygame manda abrir una lectura.
         """
-        print lectura, self.run_lectura
         if not lectura in self.lecciones:
             self.lecciones.append(lectura)
             self.get_toplevel().juego.pause()
@@ -150,12 +155,28 @@ class CucaraSimsWidget(gtk.HPaned):
             dialog.run()
             dialog.destroy()
             self.get_toplevel().juego.unpause()
+        if lectura == "muerte":
+            self.toolbarestado.set_info("Se han producido muertes en el habitat.")
+        elif lectura == "reproducción":
+            self.toolbarestado.set_info("Hay nuevas ootecas en el habitat.")
+        elif lectura == "ciclo vital":
+            self.toolbarestado.set_info("Se han producido nacimientos en el habitat.")
+        elif lectura == "muda":
+            self.toolbarestado.set_info("Algunas Cucarachas han realizado la muda de su exoesqueleto.")
+        elif lectura == "plaga":
+            #self.toolbarestado.set_info("Hay Demasiadas Cucarachas en el habitat. Algunas migrarán. !!!")
+            pass
+        elif lectura == "extincion":
+            self.toolbarestado.set_info("Ya no es Posible la Reproducción en el Habitat.")
+        else:
+            print lectura, self.run_lectura
 
     def clear_cursor(self, widget):
         """
         El juego pygame indica que ya no debe haber cursor personalizado.
         """
         self.__set_cursor(False, False)
+        self.toolbarestado.set_info("Las Cucarachas Detectan con sus Antenas, el Alimento en el Habitat.")
 
 
 class Derecha(gtk.EventBox):
@@ -204,7 +225,7 @@ class Derecha(gtk.EventBox):
         self.emit("select", tipo)
 
     def __emit_lectura(self, button):
-        self.emit("lectura", button.get_label())
+        self.emit("lectura", button.get_label().lower())
 
 
 class ButtonImagen(gtk.EventBox):

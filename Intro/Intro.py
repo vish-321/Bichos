@@ -188,17 +188,15 @@ class Intro(gobject.GObject):
         boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
-        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
-        boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 50))
-        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255),
-        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
-        x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
-        y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
-        boton.set_posicion(punto=(x, y))
-        self.widgets.add(boton)
+        #path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
+        #boton = JAMButton("", path, "rectangulo")
+        #boton.set_imagen(origen=path, tamanio=(100, 50))
+        #boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        #boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
+        #x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
+        #y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
+        #boton.set_posicion(punto=(x, y))
+        #self.widgets.add(boton)
 
         path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
         boton = JAMButton("", path, "rectangulo")

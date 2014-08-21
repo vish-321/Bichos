@@ -69,7 +69,7 @@ class Bicho(Sprite):
         self.rect.centerx, self.rect.centery = (x, y)
         self.dx, self.dy = self.__get_vector(self.angulo)
         self.__actualizar_posicion()
-        self.sonido.set_volume(0.10)
+        self.sonido.set_volume(0.20)
         self.sonido.play(-1)
 
     def __get_vector(self, angulo):

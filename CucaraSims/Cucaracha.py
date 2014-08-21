@@ -79,13 +79,11 @@ class Cucaracha(Sprite, gobject.GObject):
         random.seed()
         self.muerte = random.randrange(340, 365, 1)  # morirá este dia
         self.mudas = {
-            10: (53, 40),
-            30: (63, 50),
+            10: (63, 50),
             50: (73, 60),
-            90: (83, 70),
-            130: (93, 80),
-            180: (103, 90)}
-        self.repro = range(190, 330, 30)
+            60: (83, 70),
+            90: (103, 90)}
+        self.repro = range(91, 330, random.randrange(15, 30, 1))
 
         self.timer = Timer(TIME)
         self.edad = {
@@ -271,12 +269,12 @@ class Cucaracha(Sprite, gobject.GObject):
             self.escala = self.mudas[mudas[1]]
         elif self.timer.dias in range(mudas[2], mudas[3] + 1):
             self.escala = self.mudas[mudas[2]]
-        elif self.timer.dias in range(mudas[3], mudas[4] + 1):
-            self.escala = self.mudas[mudas[3]]
-        elif self.timer.dias in range(mudas[4], mudas[5] + 1):
-            self.escala = self.mudas[mudas[4]]
+        #elif self.timer.dias in range(mudas[3], mudas[4] + 1):
+        #    self.escala = self.mudas[mudas[3]]
+        #elif self.timer.dias in range(mudas[4], mudas[5] + 1):
+        #    self.escala = self.mudas[mudas[4]]
         else:
-            self.escala = self.mudas[mudas[5]]
+            self.escala = self.mudas[mudas[3]]
         self.__set_muda(escala=self.escala)
 
     def morir(self):

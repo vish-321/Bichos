@@ -172,7 +172,7 @@ class CucaraSims(gobject.GObject):
         huevo = Huevo(pos, TIME)
         self.huevos.add(huevo)
         huevo.connect("nacer", self.__event_nacer)
-        self.emit("lectura", "reproduccion")
+        self.emit("lectura", "reproducción")
 
     def __event_nacer(self, huevo, h_m, pos):
         """
@@ -192,7 +192,7 @@ class CucaraSims(gobject.GObject):
             cucaracha.rect.centerx = pos[0]
             cucaracha.rect.centery = pos[1]
         map(self.__connect_signals, self.cucas.sprites())
-        self.emit("lectura", "ciclo-vital")
+        self.emit("lectura", "ciclo vital")
 
     #def __update_edad(self, widget, _dict):
     #    print _dict
@@ -221,6 +221,9 @@ class CucaraSims(gobject.GObject):
                         rh += 1
             if not huevos and (not rh and not machos):
                 self.emit("lectura", "extincion")
+
+    def set_volumen(self, widget, volumen):
+        pygame.mixer.music.set_volume(volumen)
 
     def set_cursor(self, widget, tipo):
         """
@@ -348,7 +351,7 @@ class CucaraSims(gobject.GObject):
             cucaracha = Cucaracha("macho", RESOLUCION_INICIAL[0],
                 RESOLUCION_INICIAL[1], TIME)
             random.seed()
-            dias = random.randrange(181, 325, 1)
+            dias = random.randrange(90, 325, 1)
             horas = random.randrange(1, 24, 1)
             cucaracha.set_edad(dias, horas)
             self.cucas.add(cucaracha)
@@ -357,16 +360,17 @@ class CucaraSims(gobject.GObject):
             cucaracha = Cucaracha("hembra", RESOLUCION_INICIAL[0],
                 RESOLUCION_INICIAL[1], TIME)
             random.seed()
-            dias = 189#random.randrange(181, 325, 1)
+            dias = 90#random.randrange(181, 325, 1)
             horas = random.randrange(1, 24, 1)
             cucaracha.set_edad(dias, horas)
             self.cucas.add(cucaracha)
 
         map(self.__connect_signals, self.cucas.sprites())
 
-        #path = os.path.join(BASE_PATH, "CucaraSims", "Sonidos", "musica.ogg")
-        #pygame.mixer.music.load(path)
-        #pygame.mixer.music.play(-1, 0.0)
+        path = os.path.join(BASE_PATH, "CucaraSims", "Sonidos", "musica.ogg")
+        pygame.mixer.music.load(path)
+        pygame.mixer.music.play(-1, 0.0)
+        pygame.mixer.music.set_volume(0.20)
 
         self.cursor_agua = Cursor("agua")
         self.cursor_pan = Cursor("alimento")
