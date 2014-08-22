@@ -112,6 +112,7 @@ class Panel(gtk.HPaned):
         self.pack1(vbox, resize=True, shrink=True)
 
         self.lectura = gtk.TextView()
+        self.lectura.set_editable(False)
         scroll = gtk.ScrolledWindow()
         scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scroll.add(self.lectura)

@@ -56,12 +56,12 @@ class CucaraSimsWidget(gtk.HPaned):
         vbox.pack_end(self.toolbarestado, False, False, 0)
 
         self.pack1(vbox, resize=True, shrink=True)
-        derecha = Derecha()
-        self.pack2(derecha, resize=False, shrink=False)
+        self.derecha = Derecha()
+        self.pack2(self.derecha, resize=False, shrink=False)
 
         self.toolbarestado.connect("volumen", self.__volumen_changed)
-        derecha.connect("select", self.__set_cursor)
-        derecha.connect("lectura", self.__run_lectura)
+        self.derecha.connect("select", self.__set_cursor)
+        self.derecha.connect("lectura", self.__run_lectura)
 
         self.show_all()
 
@@ -179,6 +179,9 @@ class CucaraSimsWidget(gtk.HPaned):
         self.__set_cursor(False, False)
         self.toolbarestado.set_info("Las Cucarachas Detectan el Alimento con sus Antenas.")
 
+    def puntos(self, juego, puntos):
+        self.derecha.set_puntos(puntos)
+
 
 class Derecha(gtk.EventBox):
 
@@ -213,6 +216,11 @@ class Derecha(gtk.EventBox):
         button.connect("select", self.__select_imagen)
         box.pack_start(button, False, False, 5)
 
+        frame = gtk.Frame(" Migraciones: ")
+        self.puntos = gtk.Label("0")
+        frame.add(self.puntos)
+        box.pack_start(frame, False, False, 5)
+
         button = gtk.Button("Salir")
         box.pack_end(button, False, False, 5)
         button.connect("clicked", self.__emit_lectura)
@@ -220,13 +228,17 @@ class Derecha(gtk.EventBox):
         self.add(box)
         self.show_all()
 
-        self.set_size_request(120, -1)
+        self.set_size_request(175, -1)
 
     def __select_imagen(self, widget, tipo):
         self.emit("select", tipo)
 
     def __emit_lectura(self, button):
         self.emit("lectura", button.get_label().lower())
+
+    def set_puntos(self, puntos):
+        puntos = int(self.puntos.get_text()) + puntos
+        self.puntos.set_text(str(puntos))
 
 
 class ButtonImagen(gtk.EventBox):

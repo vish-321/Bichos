@@ -34,7 +34,9 @@ class CucaraSims(gobject.GObject):
     "clear-cursor-gtk": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, []),
     "update": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))}
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
+    "puntos": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, (gobject.TYPE_INT, ))}
 
     def __init__(self):
 
@@ -204,18 +206,17 @@ class CucaraSims(gobject.GObject):
         objeto.timer.new_handle(True)
 
     def __control_de_poblacion(self):
-        if len(self.cucas.sprites()) >= 15:
+        if len(self.cucas.sprites()) > 15:
             self.emit("lectura", "plaga")
-            #sprites = self.cucas.sprites()
-            #puntos = 0
-            #while sprites > 15:
-            #    sprite = random.choice(sprites)
-            #    sprites.remove(sprite)
-            #    sprite.timer.salir()
-            #    sprite.kill()
-            #    puntos += 1
-            #self.emit("puntos", puntos)
-            #print puntos
+            sprites = self.cucas.sprites()
+            puntos = 0
+            while len(sprites) > 15:
+                sprite = random.choice(sprites)
+                sprites.remove(sprite)
+                sprite.timer.salir()
+                sprite.kill()
+                puntos += 1
+            self.emit("puntos", puntos)
         else:
             huevos = self.huevos.sprites()
             cucas = self.cucas.sprites()
@@ -276,6 +277,7 @@ class CucaraSims(gobject.GObject):
         try:
             while self.estado:
                 self.reloj.tick(35)
+                self.__control_de_poblacion()
                 while gtk.events_pending():
                     gtk.main_iteration()
                 self.huevos.clear(self.ventana, self.escenario)
@@ -297,7 +299,7 @@ class CucaraSims(gobject.GObject):
                 self.ventana_real.blit(pygame.transform.scale(
                     self.ventana, self.resolucionreal), (0, 0))
                 pygame.display.update()
-                self.__control_de_poblacion()
+                #self.__control_de_poblacion()
                 pygame.time.wait(3)
         except:
             pass

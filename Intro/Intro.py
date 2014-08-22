@@ -49,6 +49,9 @@ class Intro(gobject.GObject):
                     return
         pygame.event.clear()
 
+    def __emit_exit(self, widget):
+        self.emit("exit")
+
     def __emit_go_cucarasims(self, widget):
         self.emit("go", "cucarasims")
 
@@ -142,10 +145,8 @@ class Intro(gobject.GObject):
 
         path = os.path.join(BASE_PATH, "Iconos", "cucarasims.png")
         boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 50))
+        boton.set_imagen(origen=path, tamanio=(100, 80))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255),
-        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         boton.connect(callback=self.__emit_go_cucarasims, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
         y = 50
@@ -156,8 +157,6 @@ class Intro(gobject.GObject):
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255),
-        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         boton.connect(callback=self.__emit_go_cantores, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
         y = 50
@@ -168,8 +167,6 @@ class Intro(gobject.GObject):
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255),
-        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         boton.connect(callback=self.__emit_go_ojos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = 50
@@ -180,8 +177,6 @@ class Intro(gobject.GObject):
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255),
-        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
         boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
@@ -202,9 +197,7 @@ class Intro(gobject.GObject):
         boton = JAMButton("", path, "rectangulo")
         boton.set_imagen(origen=path, tamanio=(100, 50))
         boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.set_colores(colorbas=(0, 255, 0, 255),
-        #   colorbor=(255, 255, 0, 255), colorcara=(255, 255, 255, 255))
-        boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
+        boton.connect(callback=self.__emit_exit, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
         boton.set_posicion(punto=(x, y))
