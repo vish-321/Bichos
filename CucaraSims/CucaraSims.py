@@ -126,6 +126,7 @@ class CucaraSimsWidget(gtk.HPaned):
         dialog = Widget_Leccion(
             parent=self.get_toplevel(), lectura=lectura)
         dialog.run()
+        dialog.stop()
         dialog.destroy()
         self.get_toplevel().juego.unpause()
 
@@ -153,6 +154,7 @@ class CucaraSimsWidget(gtk.HPaned):
             dialog = Widget_Leccion(
                 parent=self.get_toplevel(), lectura=lectura)
             dialog.run()
+            dialog.stop()
             dialog.destroy()
             self.get_toplevel().juego.unpause()
         if lectura == "muerte":

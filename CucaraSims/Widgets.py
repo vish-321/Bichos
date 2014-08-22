@@ -24,6 +24,8 @@ import gtk
 import gobject
 import pygame
 from pygame.sprite import Sprite
+from JAMediaImagenes.ImagePlayer import ImagePlayer
+from JAMediaReproductor.JAMediaReproductor import JAMediaReproductor
 
 BASE_PATH = os.path.dirname(__file__)
 
@@ -69,6 +71,10 @@ class Widget_Leccion(gtk.Dialog):
         rect = parent.get_allocation()
         self.set_size_request(rect.width, rect.height)
 
+    def stop(self):
+        for visor in self.panel.players:
+            visor.player.stop()
+
 
 class Panel(gtk.HPaned):
 
@@ -94,11 +100,13 @@ class Panel(gtk.HPaned):
         elif lectura == "extinción":
             dirpath = os.path.join(BASE_PATH, "Lecturas", "Extincion")
 
+        self.players = []
         vbox = gtk.VBox()
-        for archivo in os.listdir(dirpath):
+        for archivo in sorted(os.listdir(dirpath)):
             tipo = describe_archivo(os.path.join(dirpath, archivo))
             if 'video' in tipo or 'application/ogg' in tipo or "image" in tipo:
                 drawing = Visor(os.path.join(dirpath, archivo))
+                self.players.append(drawing)
                 vbox.pack_start(drawing, True, True, 0)
 
         self.pack1(vbox, resize=True, shrink=True)
@@ -124,11 +132,22 @@ class Visor(gtk.DrawingArea):
 
         gtk.DrawingArea.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
 
         self.archivo = archivo
+        self.player = False
+
+        self.connect("realize", self.__realize)
 
         self.show_all()
+
+    def __realize(self, widget):
+        tipo = describe_archivo(self.archivo)
+        if "image" in tipo:
+            self.player = ImagePlayer(self)
+        elif 'video' in tipo or 'application/ogg':
+            self.player = JAMediaReproductor(self.get_property('window').xid)
+        gobject.idle_add(self.player.load, self.archivo)
 
 
 class Cursor(Sprite):

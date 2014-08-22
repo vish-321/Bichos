@@ -206,16 +206,16 @@ class CucaraSims(gobject.GObject):
     def __control_de_poblacion(self):
         if len(self.cucas.sprites()) >= 15:
             self.emit("lectura", "plaga")
-            sprites = self.cucas.sprites()
-            puntos = 0
-            while sprites > 15:
-                sprite = random.choice(sprites)
-                sprites.remove(sprite)
-                sprite.timer.salir()
-                sprite.kill()
-                puntos += 1
+            #sprites = self.cucas.sprites()
+            #puntos = 0
+            #while sprites > 15:
+            #    sprite = random.choice(sprites)
+            #    sprites.remove(sprite)
+            #    sprite.timer.salir()
+            #    sprite.kill()
+            #    puntos += 1
             #self.emit("puntos", puntos)
-            print puntos
+            #print puntos
         else:
             huevos = self.huevos.sprites()
             cucas = self.cucas.sprites()

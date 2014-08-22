@@ -23,7 +23,7 @@ CICLO VITAL:
 	crecer, reproducirse y completar su
 	ciclo vital.
 
-	Cuanto tengas muchas, algunas se irán hacia
+	Cuando tengas muchas, algunas se irán hacia
 	otros hábitats y serán contabilizadas
 	como puntaje para ti por haberlas ayudado a
 	completar su ciclo exitosamente.
