@@ -217,6 +217,7 @@ class Derecha(gtk.EventBox):
         box.pack_start(button, False, False, 5)
 
         frame = gtk.Frame(" Migraciones: ")
+        frame.set_label_align(0.5, 0.5)
         self.puntos = gtk.Label("0")
         frame.add(self.puntos)
         box.pack_start(frame, False, False, 5)

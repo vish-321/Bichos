@@ -35,7 +35,17 @@ class CantaBichos(gtk.Table):
                 self.attach(boton, col, col + 1, row, row + 1)
                 index += 1
 
+        self.connect("realize", self.__realize)
         self.show_all()
+
+    def __realize(self, widget):
+        gobject.idle_add(self.__dialog_run)
+
+    def __dialog_run(self):
+        dialog = Dialog(parent=self.get_toplevel(),
+            text="Presiona Escape Cuando Desees Salir")
+        dialog.run()
+        return False
 
     def get_sounds(self):
         sounds = 0
@@ -100,7 +110,8 @@ class Button(gtk.EventBox):
                     gtk.STATE_NORMAL, gtk.gdk.color_parse("#e9b96e"))
                 self.player.load(self.sonido)
             else:
-                dialog = Dialog(parent=self.get_toplevel())
+                dialog = Dialog(parent=self.get_toplevel(),
+                    text="No Puedes Activar mas de 8 Sonidos Simultaneos")
                 dialog.run()
 
         elif self.active == True:
@@ -129,7 +140,7 @@ class Button(gtk.EventBox):
 
 class Dialog(gtk.Dialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, text=""):
 
         gtk.Dialog.__init__(self, parent=parent)
 
@@ -137,7 +148,7 @@ class Dialog(gtk.Dialog):
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
         self.set_border_width(15)
 
-        label = gtk.Label("No Puedes Activar mas de 8 Sonidos Simultaneos")
+        label = gtk.Label(text)
 
         self.vbox.pack_start(label, True, True, 0)
         self.vbox.show_all()
