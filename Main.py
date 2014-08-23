@@ -15,6 +15,7 @@ from Widgets import Escenario
 from CantaBichos.CantaBichos import CantaBichos
 from CucaraSims.CucaraSims import CucaraSimsWidget
 from CucaraSims.Juego import CucaraSims
+from OjosCompuestos.OjosCompuestos import OjosCompuestos
 
 
 class Bichos(gtk.Window):
@@ -140,6 +141,8 @@ class Bichos(gtk.Window):
             self.switch(False, 2)
         elif game == "cantores":
             self.switch(False, 3)
+        elif game == "ojos":
+            self.switch(False, 4)
 
     def switch(self, widget, valor):
         for child in self.get_children():
@@ -167,6 +170,16 @@ class Bichos(gtk.Window):
         elif valor == 3:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
             self.widgetjuego = CantaBichos()
+            self.add(self.widgetjuego)
+
+        elif valor == 4:
+            self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
+            escenario = Escenario()
+            escenario.modify_bg(
+                gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+            #escenario.connect("new-size", self.__redraw)
+            #escenario.connect("mouse-enter", self.__mouse_enter)
+            self.widgetjuego = OjosCompuestos(escenario)
             self.add(self.widgetjuego)
 
 
