@@ -5,21 +5,6 @@
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-import os
 import gtk
 import gobject
 
@@ -101,7 +86,6 @@ class PlayerList(gtk.Frame):
         item = model.get_iter_first()
 
         self.lista.get_selection().select_iter(item)
-        first_path = model.get_path(item)
 
         while item:
             filepaths.append(model.get_value(item, 2))
@@ -111,9 +95,6 @@ class PlayerList(gtk.Frame):
 
 
 class Lista(gtk.TreeView):
-    """
-    Lista generica.
-    """
 
     __gsignals__ = {
     "nueva-seleccion": (gobject.SIGNAL_RUN_LAST,
@@ -134,7 +115,6 @@ class Lista(gtk.TreeView):
         self.permitir_select = True
         self.valor_select = False
         self.ultimo_select = False
-        #self.timer_select = False
 
         self.__setear_columnas()
 
@@ -156,10 +136,6 @@ class Lista(gtk.TreeView):
 
         if self.valor_select != valor:
             self.valor_select = valor
-
-            #if self.timer_select:
-            #    gobject.source_remove(self.timer_select)
-            #    self.timer_select = False
 
             gobject.timeout_add(3, self.__select,
                 self.get_model().get_path(_iter))
@@ -202,10 +178,6 @@ class Lista(gtk.TreeView):
         return columna
 
     def __ejecutar_agregar_elemento(self, elementos):
-        """
-        Agrega los items a la lista, uno a uno, actualizando.
-        """
-
         if not elementos:
             self.permitir_select = True
             self.seleccionar_primero()
@@ -225,7 +197,6 @@ class Lista(gtk.TreeView):
         self.get_model().clear()
         self.valor_select = False
         self.ultimo_select = False
-        #self.timer_select = False
         self.permitir_select = True
 
     def agregar_items(self, elementos):
@@ -251,9 +222,6 @@ class Lista(gtk.TreeView):
     def seleccionar_anterior(self, widget=None):
         modelo, _iter = self.get_selection().get_selected()
         try:
-            # HACK porque: model no tiene iter_previous
-            #self.get_selection().select_iter(
-            #    self.get_model().iter_previous(_iter))
             path = self.get_model().get_path(_iter)
             path = (path[0] - 1, )
 
@@ -280,7 +248,6 @@ class Lista(gtk.TreeView):
 
         if _iter:
             self.get_selection().select_iter(_iter)
-            #path = model.get_path(iter)
 
     def select_valor(self, path_origen):
         model = self.get_model()

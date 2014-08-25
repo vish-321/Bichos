@@ -5,20 +5,6 @@
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
 import os
 import gtk
 import gobject
@@ -166,7 +152,6 @@ class Cursor(Sprite):
             path = os.path.join(BASE_PATH, "Imagenes", "pan.png")
 
         self.image = pygame.image.load(path)
-        # pygame.transform.scale(pygame.image.load(path), (24, 48))
         self.rect = self.image.get_bounding_rect()
 
     def pos(self, pos):
@@ -190,7 +175,6 @@ class Alimento(Sprite):
             path = os.path.join(BASE_PATH, "Imagenes", "pan.png")
 
         self.image = pygame.image.load(path)
-        # pygame.transform.scale(pygame.image.load(path), (24, 48))
         self.rect = self.image.get_bounding_rect()
         self.rect.centerx = pos[0]
         self.rect.centery = pos[1]
@@ -218,7 +202,6 @@ class Toolbar(gtk.EventBox):
         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono,
             -1, 24)
         imagen.set_from_pixbuf(pixbuf)
-        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
         imagen.show()
         item = gtk.ToolItem()
         item.add(imagen)
@@ -239,7 +222,6 @@ class Toolbar(gtk.EventBox):
         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono,
             -1, 24)
         imagen.set_from_pixbuf(pixbuf)
-        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
         imagen.show()
         item = gtk.ToolItem()
         item.add(imagen)
@@ -253,13 +235,10 @@ class Toolbar(gtk.EventBox):
         item.add(self.labelootecas)
         toolbar.insert(item, -1)
 
-        #toolbar.insert(get_separador(draw=False, ancho=3, expand=False), -1)
-
         imagen = gtk.Image()
         icono = os.path.join(BASE_PATH, "Imagenes", "jarra.png")
         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono, -1, 24)
         imagen.set_from_pixbuf(pixbuf)
-        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
         imagen.show()
         item = gtk.ToolItem()
         item.add(imagen)
@@ -279,7 +258,6 @@ class Toolbar(gtk.EventBox):
         icono = os.path.join(BASE_PATH, "Imagenes", "pan.png")
         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icono, -1, 24)
         imagen.set_from_pixbuf(pixbuf)
-        #imagen.modify_bg(0, Gdk.Color(0, 0, 0))
         imagen.show()
         item = gtk.ToolItem()
         item.add(imagen)

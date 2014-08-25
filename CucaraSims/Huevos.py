@@ -3,6 +3,7 @@
 
 #   Huevos.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
+#   Uruguay
 
 import os
 import gobject

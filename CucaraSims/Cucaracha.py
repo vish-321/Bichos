@@ -3,6 +3,7 @@
 
 #   Cucaracha.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
+#   Uruguay
 
 import os
 import gobject
@@ -269,10 +270,6 @@ class Cucaracha(Sprite, gobject.GObject):
             self.escala = self.mudas[mudas[1]]
         elif self.timer.dias in range(mudas[2], mudas[3] + 1):
             self.escala = self.mudas[mudas[2]]
-        #elif self.timer.dias in range(mudas[3], mudas[4] + 1):
-        #    self.escala = self.mudas[mudas[3]]
-        #elif self.timer.dias in range(mudas[4], mudas[5] + 1):
-        #    self.escala = self.mudas[mudas[4]]
         else:
             self.escala = self.mudas[mudas[3]]
         self.__set_muda(escala=self.escala)

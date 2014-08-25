@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#   Cucaracha.py por:
+#   Timer.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
+#   Uruguay
 
 import time
 import gobject
-
-#gobject.threads_init()
 
 
 class Timer(gobject.GObject):

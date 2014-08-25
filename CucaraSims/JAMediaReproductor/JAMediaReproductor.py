@@ -4,26 +4,10 @@
 #   JAMediaReproductor.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
 import gobject
-import pygst
 import gst
-import gtk
 
 from JAMediaBins import JAMedia_Audio_Pipeline
 from JAMediaBins import JAMedia_Video_Pipeline
@@ -31,7 +15,6 @@ from JAMediaBins import JAMedia_Video_Pipeline
 PR = False
 
 gobject.threads_init()
-#gtk.gdk.threads_init()
 
 
 class JAMediaReproductor(gobject.GObject):
@@ -48,8 +31,6 @@ class JAMediaReproductor(gobject.GObject):
     "loading-buffer": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, (gobject.TYPE_INT, )),
         }
-
-    # Estados: playing, paused, None
 
     def __init__(self, ventana_id):
 
@@ -85,10 +66,7 @@ class JAMediaReproductor(gobject.GObject):
     def __sync_message(self, bus, message):
         if message.type == gst.MESSAGE_ELEMENT:
             if message.structure.get_name() == 'prepare-xwindow-id':
-                #gtk.gdk.threads_enter()
-                #gtk.gdk.display_get_default().sync()
                 message.src.set_xwindow_id(self.ventana_id)
-                #gtk.gdk.threads_leave()
 
         elif message.type == gst.MESSAGE_STATE_CHANGED:
             old, new, pending = message.parse_state_changed()
@@ -220,7 +198,6 @@ class JAMediaReproductor(gobject.GObject):
         self.emit("loading-buffer", 100)
 
         if os.path.exists(uri):
-            #direccion = gst.filename_to_uri(uri)
             direccion = "file://" + uri
             self.player.set_property("uri", direccion)
             self.progressbar = True
@@ -246,22 +223,6 @@ class JAMediaReproductor(gobject.GObject):
 
         posicion = self.duracion * posicion / 100
 
-        # http://pygstdocs.berlios.de/pygst-reference/gst-constants.html
-        #self.player.set_state(gst.STATE_PAUSED)
-        # http://nullege.com/codes/show/
-        #   src@d@b@dbr-HEAD@trunk@src@reproductor.py/72/gst.SEEK_TYPE_SET
-        #self.player.seek(
-        #    1.0,
-        #    gst.FORMAT_TIME,
-        #    gst.SEEK_FLAG_FLUSH,
-        #    gst.SEEK_TYPE_SET,
-        #    posicion,
-        #    gst.SEEK_TYPE_SET,
-        #    self.duracion)
-
-        # http://nullege.com/codes/show/
-        #   src@c@o@congabonga-HEAD@congaplayer@congalib@engines@gstplay.py/
-        #   104/gst.SEEK_FLAG_ACCURATE
         event = gst.event_new_seek(
             1.0, gst.FORMAT_TIME,
             gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE,
@@ -269,7 +230,6 @@ class JAMediaReproductor(gobject.GObject):
             gst.SEEK_TYPE_NONE, self.duracion * 1000000000)
 
         self.player.send_event(event)
-        #self.player.set_state(gst.STATE_PLAYING)
 
     def set_volumen(self, volumen):
         self.player.set_property('volume', volumen / 10)

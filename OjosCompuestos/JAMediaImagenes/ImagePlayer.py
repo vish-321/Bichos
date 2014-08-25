@@ -4,41 +4,10 @@
 #   ImagePlayer.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-"""
-Descripción:
-    Visor de Imágenes en base a gstreamer.
-
-    Recibe un widget gtk para dibujar sobre él.
-
-    Utilice la función: load(file_path)
-        para cargar el archivo a dibujar.
-
-    Utilice la función: stop()
-        para detener la reproducción
-
-    Utilice la función: rotar("Derecha") o rotar("Izquierda")
-        para rotar la imágen
-"""
 
 import os
 import gobject
 import gst
-import gtk
 
 PR = False
 
@@ -109,31 +78,13 @@ class PlayerBin(gobject.GObject):
         self.player.set_property('video-sink', self.video_bin)
 
         self.bus = self.player.get_bus()
-        #self.bus.set_sync_handler(self.__bus_handler)
-        self.bus.add_signal_watch()                             # ****
-        #self.bus.connect('message', self.__on_mensaje)          # ****
-        self.bus.enable_sync_message_emission()                 # ****
-        self.bus.connect('sync-message', self.__sync_message)   # ****
+        self.bus.add_signal_watch()
+        self.bus.enable_sync_message_emission()
+        self.bus.connect('sync-message', self.__sync_message)
 
     def __sync_message(self, bus, message):
         if message.type == gst.MESSAGE_ELEMENT:
             if message.structure.get_name() == 'prepare-xwindow-id':
-                #gtk.gdk.threads_enter()
-                #gtk.gdk.display_get_default().sync()
-                message.src.set_xwindow_id(self.ventana_id)
-                #gtk.gdk.threads_leave()
-
-        elif message.type == gst.MESSAGE_ERROR:
-            err, debug = message.parse_error()
-            if PR:
-                print "ImagePlayer ERROR:"
-                print "\t%s" % err
-                print "\t%s" % debug
-
-    '''
-    def __bus_handler(self, bus, message):
-        if message.type == gst.MESSAGE_ELEMENT:
-            if message.structure.get_name() == 'prepare-xwindow-id':
                 message.src.set_xwindow_id(self.ventana_id)
 
         elif message.type == gst.MESSAGE_ERROR:
@@ -142,9 +93,6 @@ class PlayerBin(gobject.GObject):
                 print "ImagePlayer ERROR:"
                 print "\t%s" % err
                 print "\t%s" % debug
-
-        return gst.BUS_PASS
-    '''
 
     def __play(self):
         self.player.set_state(gst.STATE_PLAYING)
@@ -191,7 +139,7 @@ class Video_Out(gst.Pipeline):
         videoflip = gst.element_factory_make('videoflip', "videoflip")
         caps = gst.Caps(
             'video/x-raw-rgb,framerate=30/1,width=%s,height=%s' % (
-            width,height))
+            width, height))
         filtro = gst.element_factory_make("capsfilter", "filtro")
         filtro.set_property("caps", caps)
 

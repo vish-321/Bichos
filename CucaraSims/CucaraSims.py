@@ -5,20 +5,6 @@
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
 import os
 import gtk
 import gobject
@@ -158,17 +144,22 @@ class CucaraSimsWidget(gtk.HPaned):
             dialog.destroy()
             self.get_toplevel().juego.unpause()
         if lectura == "muerte":
-            self.toolbarestado.set_info("Se han producido muertes en el habitat.")
+            self.toolbarestado.set_info(
+                "Se han producido muertes en el habitat.")
         elif lectura == "reproducción":
             self.toolbarestado.set_info("Hay nuevas ootecas en el habitat.")
         elif lectura == "ciclo vital":
-            self.toolbarestado.set_info("Se han producido nacimientos en el habitat.")
+            self.toolbarestado.set_info(
+                "Se han producido nacimientos en el habitat.")
         elif lectura == "muda de exoesqueleto":
-            self.toolbarestado.set_info("Algunas Cucarachas han realizado la muda de su exoesqueleto.")
+            self.toolbarestado.set_info(
+                "Algunas Cucarachas han realizado la muda de su exoesqueleto.")
         elif lectura == "plaga":
-            self.toolbarestado.set_info("Hay Demasiadas Cucarachas en el habitat. Algunas migrarán. !!!")
+            self.toolbarestado.set_info(
+                "Hay Demasiadas Cucarachas en el habitat. Algunas migrarán. !!!")
         elif lectura == "extinción":
-            self.toolbarestado.set_info("Ya no es Posible la Reproducción en el Habitat.")
+            self.toolbarestado.set_info(
+                "Ya no es Posible la Reproducción en el Habitat.")
         else:
             print lectura, self.run_lectura
 
@@ -177,7 +168,8 @@ class CucaraSimsWidget(gtk.HPaned):
         El juego pygame indica que ya no debe haber cursor personalizado.
         """
         self.__set_cursor(False, False)
-        self.toolbarestado.set_info("Las Cucarachas Detectan el Alimento con sus Antenas.")
+        self.toolbarestado.set_info(
+            "Las Cucarachas Detectan el Alimento con sus Antenas.")
 
     def puntos(self, juego, puntos):
         self.derecha.set_puntos(puntos)

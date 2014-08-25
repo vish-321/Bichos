@@ -61,9 +61,6 @@ class Intro(gobject.GObject):
     def __emit_go_ojos(self, widget):
         self.emit("go", "ojos")
 
-    def __emit_go_creditos(self, widget):
-        self.emit("go", "creditos")
-
     def run(self):
         print "Corriendo Intro . . ."
         self.estado = 1
@@ -143,60 +140,44 @@ class Intro(gobject.GObject):
             RESOLUCION_INICIAL[1]), flags=HWSURFACE)
         self.ventana_real = pygame.display.get_surface()
 
-        path = os.path.join(BASE_PATH, "Iconos", "cucarasims.png")
-        boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 80))
-        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        boton = JAMButton("CucaraSims", None, "rectangulo")
+        boton.set_text(tamanio=30)
+        boton.set_tamanios(tamanio=(160, 70), grosorbor=3, espesor=5)
+        boton.set_colores(colorbas=(51, 121, 183, 255),
+            colorbor=(255, 255, 255, 255), colorcara=(206, 229, 237, 255))
         boton.connect(callback=self.__emit_go_cucarasims, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
         y = 50
         boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
-        path = os.path.join(BASE_PATH, "Iconos", "cantores.png")
-        boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 50))
-        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        boton = JAMButton("Canciones", None, "rectangulo")
+        boton.set_text(tamanio=30)
+        boton.set_tamanios(tamanio=(160, 70), grosorbor=3, espesor=5)
+        boton.set_colores(colorbas=(51, 121, 183, 255),
+            colorbor=(255, 255, 255, 255), colorcara=(206, 229, 237, 255))
         boton.connect(callback=self.__emit_go_cantores, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
         y = 50
         boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
-        path = os.path.join(BASE_PATH, "Iconos", "ojos.png")
-        boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 50))
-        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        boton = JAMButton("Imágenes", None, "rectangulo")
+        boton.set_text(tamanio=30)
+        boton.set_tamanios(tamanio=(160, 70), grosorbor=3, espesor=5)
+        boton.set_colores(colorbas=(51, 121, 183, 255),
+            colorbor=(255, 255, 255, 255), colorcara=(206, 229, 237, 255))
         boton.connect(callback=self.__emit_go_ojos, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = 50
         boton.set_posicion(punto=(x, y))
         self.widgets.add(boton)
 
-        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
-        boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 50))
-        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
-        x = (RESOLUCION_INICIAL[0] / 4 - (boton.get_tamanio()[0] / 2))
-        y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
-        boton.set_posicion(punto=(x, y))
-        self.widgets.add(boton)
-
-        #path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
-        #boton = JAMButton("", path, "rectangulo")
-        #boton.set_imagen(origen=path, tamanio=(100, 50))
-        #boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
-        #boton.connect(callback=self.__emit_go_creditos, sonido_select=None)
-        #x = (RESOLUCION_INICIAL[0] / 2 - (boton.get_tamanio()[0] / 2))
-        #y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50
-        #boton.set_posicion(punto=(x, y))
-        #self.widgets.add(boton)
-
-        path = os.path.join(BASE_PATH, "Iconos", "creditos.png")
-        boton = JAMButton("", path, "rectangulo")
-        boton.set_imagen(origen=path, tamanio=(100, 50))
-        boton.set_tamanios(tamanio=(100, 50), grosorbor=3, espesor=5)
+        boton = JAMButton("Salir", None, "rectangulo")
+        boton.set_text(tamanio=30)
+        boton.set_tamanios(tamanio=(160, 70), grosorbor=3, espesor=5)
+        boton.set_colores(colorbas=(51, 121, 183, 255),
+            colorbor=(255, 255, 255, 255), colorcara=(206, 229, 237, 255))
         boton.connect(callback=self.__emit_exit, sonido_select=None)
         x = (RESOLUCION_INICIAL[0] / 4 * 3 - (boton.get_tamanio()[0] / 2))
         y = (RESOLUCION_INICIAL[1] - boton.get_tamanio()[1]) - 50

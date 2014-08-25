@@ -4,22 +4,7 @@
 #   JAMediaBins.py por:
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygst
 import gst
 import gobject
 
@@ -69,7 +54,7 @@ class JAMedia_Video_Pipeline(gst.Pipeline):
         pantalla = gst.element_factory_make('xvimagesink', "pantalla")
         pantalla.set_property("force-aspect-ratio", True)
 
-        try: # FIXME: xo no posee esta propiedad
+        try:  # FIXME: xo no posee esta propiedad
             rate.set_property('max-rate', 30)
 
         except:

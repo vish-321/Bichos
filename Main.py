@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#   Bichos.py por:
+#   Flavio Danesse <fdanesse@gmail.com>
+#   Uruguay
+
 import os
 import sys
 import gtk
 import gobject
-#import threading
 
 from EventTraductor.EventTraductor import KeyPressTraduce
 from EventTraductor.EventTraductor import KeyReleaseTraduce
@@ -29,7 +32,6 @@ class Bichos(gtk.Window):
         #self.set_icon_from_file(os.path.join(BASE, "Iconos", "bichos.svg"))
         self.set_resizable(True)
         self.set_size_request(640, 480)
-        #self.set_border_width(2)
         self.set_position(gtk.WIN_POS_CENTER)
 
         self.juego = False
@@ -49,7 +51,6 @@ class Bichos(gtk.Window):
             KeyPressTraduce(event)
         else:
             if gtk.gdk.keyval_name(event.keyval) == "Escape":
-                # FIXME: Escape en juego gtk (CantaBichos).
                 self.widgetjuego.salir()
                 self.switch(False, 1)
         return False
@@ -77,13 +78,6 @@ class Bichos(gtk.Window):
         self.juego.connect("go", self.__run_games)
         self.juego.config()
         self.juego.run()
-        '''
-        game_thread = threading.Thread(
-            target=self.juego.run, name='game')
-        game_thread.setDaemon(True)
-        game_thread.start()
-        #self.juego.connect("switch", self.__intro_switch)
-        '''
         return False
 
     def __run_cucarasims(self, escenario):
@@ -177,8 +171,6 @@ class Bichos(gtk.Window):
             escenario = Escenario()
             escenario.modify_bg(
                 gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
-            #escenario.connect("new-size", self.__redraw)
-            #escenario.connect("mouse-enter", self.__mouse_enter)
             self.widgetjuego = OjosCompuestos(escenario)
             self.add(self.widgetjuego)
 

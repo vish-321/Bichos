@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#   Juego.py por:
+#   Flavio Danesse <fdanesse@gmail.com>
+#   Uruguay
+
 import os
 import gobject
 import pygame
@@ -299,7 +303,6 @@ class CucaraSims(gobject.GObject):
                 self.ventana_real.blit(pygame.transform.scale(
                     self.ventana, self.resolucionreal), (0, 0))
                 pygame.display.update()
-                #self.__control_de_poblacion()
                 pygame.time.wait(3)
         except:
             pass
@@ -359,7 +362,7 @@ class CucaraSims(gobject.GObject):
         self.timer = Timer(TIME)  # 1 segundo == 1 hora
         self.timer.connect("new-time", self.__update_time)
 
-        for x in range (2):
+        for x in range(2):
             cucaracha = Cucaracha("macho", RESOLUCION_INICIAL[0],
                 RESOLUCION_INICIAL[1], TIME)
             random.seed()
@@ -368,11 +371,11 @@ class CucaraSims(gobject.GObject):
             cucaracha.set_edad(dias, horas)
             self.cucas.add(cucaracha)
 
-        for x in range (2):
+        for x in range(2):
             cucaracha = Cucaracha("hembra", RESOLUCION_INICIAL[0],
                 RESOLUCION_INICIAL[1], TIME)
             random.seed()
-            dias = 90#random.randrange(181, 325, 1)
+            dias = 90
             horas = random.randrange(1, 24, 1)
             cucaracha.set_edad(dias, horas)
             self.cucas.add(cucaracha)
