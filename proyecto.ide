@@ -1,17 +1,17 @@
 {
     "autores":[
         [
-            "", 
-            ""
+            "Flavio Danesse", 
+            "fdanesse@gmail.com"
         ]
     ], 
     "categoria":"", 
     "descripcion":"", 
-    "licencia":"GPL2", 
+    "licencia":"GPL3", 
     "main":"Main.py", 
     "mimetypes":"", 
     "nombre":"Bichos", 
     "path":"/home/flavio/BatovideWorkSpace/Bichos", 
     "url":"", 
-    "version":"0.0.1"
+    "version":"1.0.0"
 }
