@@ -109,8 +109,8 @@ class Lista(gtk.TreeView):
 
         self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
         self.set_property("rules-hint", True)
-        self.set_headers_clickable(True)
-        self.set_headers_visible(True)
+        self.set_headers_clickable(False)
+        self.set_headers_visible(False)
 
         self.permitir_select = True
         self.valor_select = False
@@ -152,7 +152,7 @@ class Lista(gtk.TreeView):
 
     def __setear_columnas(self):
         self.append_column(self.__construir_columa_icono('', 0, True))
-        self.append_column(self.__construir_columa('Archivo', 1, True))
+        self.append_column(self.__construir_columa('Archivo', 1, False))
         self.append_column(self.__construir_columa('', 2, False))
 
     def __construir_columa(self, text, index, visible):
@@ -185,7 +185,7 @@ class Lista(gtk.TreeView):
             return False
 
         texto, path = elementos[0]
-        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(path, 50, -1)
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(path, 140, -1)
 
         self.get_model().append([pixbuf, texto, path])
         elementos.remove(elementos[0])
