@@ -5,7 +5,7 @@
             "fdanesse@gmail.com"
         ]
     ], 
-    "categoria":"", 
+    "categoria":"Game", 
     "descripcion":"", 
     "licencia":"GPL3", 
     "main":"Main.py", 

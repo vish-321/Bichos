@@ -108,13 +108,21 @@ class CucaraSimsWidget(gtk.HPaned):
         if lectura == "salir":
             self.emit("exit")
             return
-        self.get_toplevel().juego.pause()
+        try:
+            self.get_toplevel().juego.pause()
+        except:
+            # Para Sugar
+            self.get_toplevel().interfaz.juego.pause()
         dialog = Widget_Leccion(
             parent=self.get_toplevel(), lectura=lectura)
         dialog.run()
         dialog.stop()
         dialog.destroy()
-        self.get_toplevel().juego.unpause()
+        try:
+            self.get_toplevel().juego.unpause()
+        except:
+            # Para Sugar
+            self.get_toplevel().interfaz.juego.unpause()
 
     def update(self, juego, _dict):
         """
@@ -136,13 +144,21 @@ class CucaraSimsWidget(gtk.HPaned):
         """
         if not lectura in self.lecciones:
             self.lecciones.append(lectura)
-            self.get_toplevel().juego.pause()
+            try:
+                self.get_toplevel().juego.pause()
+            except:
+                # Para Sugar
+                self.get_toplevel().interfaz.juego.pause()
             dialog = Widget_Leccion(
                 parent=self.get_toplevel(), lectura=lectura)
             dialog.run()
             dialog.stop()
             dialog.destroy()
-            self.get_toplevel().juego.unpause()
+            try:
+                self.get_toplevel().juego.unpause()
+            except:
+                # Para Sugar
+                self.get_toplevel().interfaz.juego.unpause()
         if lectura == "muerte":
             self.toolbarestado.set_info(
                 "Se han producido muertes en el habitat.")

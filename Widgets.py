@@ -49,24 +49,46 @@ class Escenario(gtk.DrawingArea):
         self.emit("mouse-enter", False)
 
     def __button_press_event(self, widget, event):
-        if self.get_toplevel().juego:
-            Traduce_button_press_event(event,
-                self.get_allocation(),
-                self.get_toplevel().juego.RESOLUCION_INICIAL)
+        try:
+            if self.get_toplevel().juego:
+                Traduce_button_press_event(event,
+                    self.get_allocation(),
+                    self.get_toplevel().juego.RESOLUCION_INICIAL)
+        except:
+            # Para Sugar
+            if self.get_toplevel().interfaz.juego:
+                Traduce_button_press_event(event,
+                    self.get_allocation(),
+                    self.get_toplevel().interfaz.juego.RESOLUCION_INICIAL)
+
         return False
 
     def __button_release_event(self, widget, event):
-        if self.get_toplevel().juego:
-            Traduce_button_release_event(event,
-                self.get_allocation(),
-                self.get_toplevel().juego.RESOLUCION_INICIAL)
+        try:
+            if self.get_toplevel().juego:
+                Traduce_button_release_event(event,
+                    self.get_allocation(),
+                    self.get_toplevel().juego.RESOLUCION_INICIAL)
+        except:
+            # Para Sugar
+            if self.get_toplevel().interfaz.juego:
+                Traduce_button_release_event(event,
+                    self.get_allocation(),
+                    self.get_toplevel().interfaz.juego.RESOLUCION_INICIAL)
         return False
 
     def __mouse_motion(self, widget, event):
-        if self.get_toplevel().juego:
-            MousemotionTraduce(event,
-                self.get_allocation(),
-                self.get_toplevel().juego.RESOLUCION_INICIAL)
+        try:
+            if self.get_toplevel().juego:
+                MousemotionTraduce(event,
+                    self.get_allocation(),
+                    self.get_toplevel().juego.RESOLUCION_INICIAL)
+        except:
+            # Para Sugar
+            if self.get_toplevel().interfaz.juego:
+                MousemotionTraduce(event,
+                    self.get_allocation(),
+                    self.get_toplevel().interfaz.juego.RESOLUCION_INICIAL)
         return False
 
     def __size_request(self, widget, event):

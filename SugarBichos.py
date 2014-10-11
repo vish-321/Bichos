@@ -10,8 +10,6 @@ import sys
 import gtk
 import gobject
 
-from sugar.activity.activity import Activity
-
 from EventTraductor.EventTraductor import KeyPressTraduce
 from EventTraductor.EventTraductor import KeyReleaseTraduce
 
@@ -22,32 +20,45 @@ from CucaraSims.CucaraSims import CucaraSimsWidget
 from CucaraSims.Juego import CucaraSims
 from OjosCompuestos.OjosCompuestos import OjosCompuestos
 
+from sugar.activity.activity import Activity
+
 
 class Bichos(Activity):
 
     def __init__(self, handle):
 
-        Activity.__init__(self, handle)
+        Activity.__init__(self, handle, False)
+        self.socket = gtk.Socket()
+        self.set_canvas(self.socket)
+        self.interfaz = Interfaz()
+        self.socket.add_id(self.interfaz.get_id())
+        self.show_all()
 
-        self.set_title("Bichos")
-        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
-        #self.set_icon_from_file(os.path.join(BASE, "Iconos", "bichos.svg"))
-        self.set_resizable(True)
-        self.set_size_request(640, 480)
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.connect("key-press-event", self.interfaz.key_press_even)
+        self.connect("key-release-event", self.interfaz.key_release_even)
+
+    def read_file(self, file_path):
+        pass
+
+    def write_file(self, file_path):
+        pass
+
+
+class Interfaz(gtk.Plug):
+
+    def __init__(self):
+
+        gtk.Plug.__init__(self, 0L)
 
         self.juego = False
         self.widgetjuego = False
-
-        self.connect("key-press-event", self.__key_press_even)
-        self.connect("key-release-event", self.__key_release_even)
 
         self.connect("delete-event", self.__salir)
         self.connect("realize", self.__do_realize)
 
         self.show_all()
 
-    def __key_press_even(self, widget, event):
+    def key_press_even(self, widget, event):
         if self.juego:
             KeyPressTraduce(event)
         else:
@@ -56,7 +67,7 @@ class Bichos(Activity):
                 self.switch(False, 1)
         return False
 
-    def __key_release_even(self, widget, event):
+    def key_release_even(self, widget, event):
         if self.juego:
             KeyReleaseTraduce(event)
         return False
@@ -148,7 +159,7 @@ class Bichos(Activity):
         if valor == 1:
             self.widgetjuego = Escenario()
             self.widgetjuego.connect("new-size", self.__redraw)
-            self.set_canvas(self.widgetjuego)
+            self.add(self.widgetjuego)
             gobject.idle_add(self.__run_intro, self.widgetjuego)
 
         elif valor == 2:
@@ -159,13 +170,13 @@ class Bichos(Activity):
             escenario.connect("new-size", self.__redraw)
             escenario.connect("mouse-enter", self.__mouse_enter)
             self.widgetjuego = CucaraSimsWidget(escenario)
-            self.set_canvas(self.widgetjuego)
+            self.add(self.widgetjuego)
             gobject.idle_add(self.__run_cucarasims, escenario)
 
         elif valor == 3:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
             self.widgetjuego = CantaBichos()
-            self.set_canvas(self.widgetjuego)
+            self.add(self.widgetjuego)
 
         elif valor == 4:
             self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#ffffff"))
@@ -173,4 +184,4 @@ class Bichos(Activity):
             escenario.modify_bg(
                 gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
             self.widgetjuego = OjosCompuestos(escenario)
-            self.set_canvas(self.widgetjuego)
+            self.add(self.widgetjuego)
